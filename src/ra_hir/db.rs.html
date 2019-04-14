@@ -136,6 +136,9 @@
 <span id="136">136</span>
 <span id="137">137</span>
 <span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">Arc</span>;
 
@@ -191,6 +194,9 @@
 
     <span class="attribute">#[<span class="ident">salsa</span>::<span class="ident">invoke</span>(<span class="kw">crate</span>::<span class="ident">traits</span>::<span class="ident">TraitData</span>::<span class="ident">trait_data_query</span>)]</span>
     <span class="kw">fn</span> <span class="ident">trait_data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">t</span>: <span class="ident">Trait</span>) <span class="op">-&gt;</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">TraitData</span><span class="op">&gt;</span>;
+
+    <span class="attribute">#[<span class="ident">salsa</span>::<span class="ident">invoke</span>(<span class="kw">crate</span>::<span class="ident">traits</span>::<span class="ident">TraitItemsIndex</span>::<span class="ident">trait_items_index</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">trait_items_index</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">module</span>: <span class="ident">Module</span>) <span class="op">-&gt;</span> <span class="kw">crate</span>::<span class="ident">traits</span>::<span class="ident">TraitItemsIndex</span>;
 
     <span class="attribute">#[<span class="ident">salsa</span>::<span class="ident">invoke</span>(<span class="kw">crate</span>::<span class="ident">source_id</span>::<span class="ident">AstIdMap</span>::<span class="ident">ast_id_map_query</span>)]</span>
     <span class="kw">fn</span> <span class="ident">ast_id_map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">file_id</span>: <span class="ident">HirFileId</span>) <span class="op">-&gt;</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">AstIdMap</span><span class="op">&gt;</span>;
@@ -267,8 +273,8 @@
     <span class="attribute">#[<span class="ident">salsa</span>::<span class="ident">invoke</span>(<span class="kw">crate</span>::<span class="ident">ty</span>::<span class="ident">method_resolution</span>::<span class="ident">CrateImplBlocks</span>::<span class="ident">impls_in_crate_query</span>)]</span>
     <span class="kw">fn</span> <span class="ident">impls_in_crate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">krate</span>: <span class="ident">Crate</span>) <span class="op">-&gt;</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">CrateImplBlocks</span><span class="op">&gt;</span>;
 
-    <span class="attribute">#[<span class="ident">salsa</span>::<span class="ident">invoke</span>(<span class="kw">crate</span>::<span class="ident">ty</span>::<span class="ident">method_resolution</span>::<span class="ident">implements</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">implements</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">trait_ref</span>: <span class="ident">TraitRef</span>) <span class="op">-&gt;</span> <span class="ident">bool</span>;
+    <span class="attribute">#[<span class="ident">salsa</span>::<span class="ident">invoke</span>(<span class="kw">crate</span>::<span class="ident">ty</span>::<span class="ident">traits</span>::<span class="ident">implements</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">implements</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">trait_ref</span>: <span class="ident">TraitRef</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw">crate</span>::<span class="ident">ty</span>::<span class="ident">traits</span>::<span class="ident">Solution</span><span class="op">&gt;</span>;
 }
 
 <span class="attribute">#[<span class="ident">test</span>]</span>

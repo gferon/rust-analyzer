@@ -1315,6 +1315,57 @@
 <span id="1315">1315</span>
 <span id="1316">1316</span>
 <span id="1317">1317</span>
+<span id="1318">1318</span>
+<span id="1319">1319</span>
+<span id="1320">1320</span>
+<span id="1321">1321</span>
+<span id="1322">1322</span>
+<span id="1323">1323</span>
+<span id="1324">1324</span>
+<span id="1325">1325</span>
+<span id="1326">1326</span>
+<span id="1327">1327</span>
+<span id="1328">1328</span>
+<span id="1329">1329</span>
+<span id="1330">1330</span>
+<span id="1331">1331</span>
+<span id="1332">1332</span>
+<span id="1333">1333</span>
+<span id="1334">1334</span>
+<span id="1335">1335</span>
+<span id="1336">1336</span>
+<span id="1337">1337</span>
+<span id="1338">1338</span>
+<span id="1339">1339</span>
+<span id="1340">1340</span>
+<span id="1341">1341</span>
+<span id="1342">1342</span>
+<span id="1343">1343</span>
+<span id="1344">1344</span>
+<span id="1345">1345</span>
+<span id="1346">1346</span>
+<span id="1347">1347</span>
+<span id="1348">1348</span>
+<span id="1349">1349</span>
+<span id="1350">1350</span>
+<span id="1351">1351</span>
+<span id="1352">1352</span>
+<span id="1353">1353</span>
+<span id="1354">1354</span>
+<span id="1355">1355</span>
+<span id="1356">1356</span>
+<span id="1357">1357</span>
+<span id="1358">1358</span>
+<span id="1359">1359</span>
+<span id="1360">1360</span>
+<span id="1361">1361</span>
+<span id="1362">1362</span>
+<span id="1363">1363</span>
+<span id="1364">1364</span>
+<span id="1365">1365</span>
+<span id="1366">1366</span>
+<span id="1367">1367</span>
+<span id="1368">1368</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Type inference, i.e. the process of walking through the code and determining</span>
 <span class="doccomment">//! the type of each expression and pattern.</span>
@@ -1338,9 +1389,9 @@
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
 
 <span class="kw">use</span> <span class="ident">ena</span>::<span class="ident">unify</span>::{<span class="ident">InPlaceUnificationTable</span>, <span class="ident">UnifyKey</span>, <span class="ident">UnifyValue</span>, <span class="ident">NoError</span>};
-<span class="kw">use</span> <span class="ident">ra_arena</span>::<span class="ident">map</span>::<span class="ident">ArenaMap</span>;
 <span class="kw">use</span> <span class="ident">rustc_hash</span>::<span class="ident">FxHashMap</span>;
 
+<span class="kw">use</span> <span class="ident">ra_arena</span>::<span class="ident">map</span>::<span class="ident">ArenaMap</span>;
 <span class="kw">use</span> <span class="ident">test_utils</span>::<span class="ident">tested_by</span>;
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
@@ -1351,15 +1402,18 @@
     <span class="ident">ImplItem</span>,
     <span class="ident">type_ref</span>::{<span class="ident">TypeRef</span>, <span class="ident">Mutability</span>},
     <span class="ident">expr</span>::{<span class="ident">Body</span>, <span class="ident">Expr</span>, <span class="ident">BindingAnnotation</span>, <span class="ident">Literal</span>, <span class="ident">ExprId</span>, <span class="ident">Pat</span>, <span class="ident">PatId</span>, <span class="ident">UnaryOp</span>, <span class="ident">BinaryOp</span>, <span class="ident">Statement</span>, <span class="ident">FieldPat</span>,<span class="ident">Array</span>, <span class="self">self</span>},
-    <span class="ident">generics</span>::<span class="ident">GenericParams</span>,
+    <span class="ident">generics</span>::{<span class="ident">GenericParams</span>, <span class="ident">HasGenericParams</span>},
     <span class="ident">path</span>::{<span class="ident">GenericArgs</span>, <span class="ident">GenericArg</span>},
     <span class="ident">adt</span>::<span class="ident">VariantDef</span>,
     <span class="ident">resolve</span>::{<span class="ident">Resolver</span>, <span class="ident">Resolution</span>},
     <span class="ident">nameres</span>::<span class="ident">Namespace</span>,
-    <span class="ident">ty</span>::<span class="ident">infer</span>::<span class="ident">diagnostics</span>::<span class="ident">InferenceDiagnostic</span>,
     <span class="ident">diagnostics</span>::<span class="ident">DiagnosticSink</span>,
 };
-<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Ty</span>, <span class="ident">TypableDef</span>, <span class="ident">Substs</span>, <span class="ident">primitive</span>, <span class="ident">op</span>, <span class="ident">FnSig</span>, <span class="ident">ApplicationTy</span>, <span class="ident">TypeCtor</span>};
+<span class="kw">use</span> <span class="kw">super</span>::{
+    <span class="ident">Ty</span>, <span class="ident">TypableDef</span>, <span class="ident">Substs</span>, <span class="ident">primitive</span>, <span class="ident">op</span>, <span class="ident">ApplicationTy</span>, <span class="ident">TypeCtor</span>, <span class="ident">CallableDef</span>, <span class="ident">TraitRef</span>,
+    <span class="ident">traits</span>::{ <span class="ident">Solution</span>, <span class="ident">Obligation</span>, <span class="ident">Guidance</span>},
+};
+<span class="kw">use</span> <span class="self">self</span>::<span class="ident">diagnostics</span>::<span class="ident">InferenceDiagnostic</span>;
 
 <span class="doccomment">/// The entry point of type inference.</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">infer</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">HirDatabase</span>, <span class="ident">def</span>: <span class="ident">DefWithBody</span>) <span class="op">-&gt;</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">InferenceResult</span><span class="op">&gt;</span> {
@@ -1471,6 +1525,7 @@
     <span class="ident">body</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Body</span><span class="op">&gt;</span>,
     <span class="ident">resolver</span>: <span class="ident">Resolver</span>,
     <span class="ident">var_unification_table</span>: <span class="ident">InPlaceUnificationTable</span><span class="op">&lt;</span><span class="ident">TypeVarId</span><span class="op">&gt;</span>,
+    <span class="ident">obligations</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Obligation</span><span class="op">&gt;</span>,
     <span class="ident">method_resolutions</span>: <span class="ident">FxHashMap</span><span class="op">&lt;</span><span class="ident">ExprId</span>, <span class="ident">Function</span><span class="op">&gt;</span>,
     <span class="ident">field_resolutions</span>: <span class="ident">FxHashMap</span><span class="op">&lt;</span><span class="ident">ExprId</span>, <span class="ident">StructField</span><span class="op">&gt;</span>,
     <span class="ident">assoc_resolutions</span>: <span class="ident">FxHashMap</span><span class="op">&lt;</span><span class="ident">ExprOrPatId</span>, <span class="ident">ImplItem</span><span class="op">&gt;</span>,
@@ -1491,6 +1546,7 @@
             <span class="ident">type_of_pat</span>: <span class="ident">ArenaMap</span>::<span class="ident">default</span>(),
             <span class="ident">diagnostics</span>: <span class="ident">Vec</span>::<span class="ident">default</span>(),
             <span class="ident">var_unification_table</span>: <span class="ident">InPlaceUnificationTable</span>::<span class="ident">new</span>(),
+            <span class="ident">obligations</span>: <span class="ident">Vec</span>::<span class="ident">default</span>(),
             <span class="ident">return_ty</span>: <span class="ident">Ty</span>::<span class="ident">Unknown</span>, <span class="comment">// set in collect_fn_signature</span>
             <span class="ident">db</span>,
             <span class="ident">body</span>,
@@ -1499,6 +1555,7 @@
     }
 
     <span class="kw">fn</span> <span class="ident">resolve_all</span>(<span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">InferenceResult</span> {
+        <span class="comment">// FIXME resolve obligations as well (use Guidance if necessary)</span>
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tv_stack</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">expr_types</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">type_of_expr</span>, <span class="ident">ArenaMap</span>::<span class="ident">default</span>());
         <span class="kw">for</span> <span class="ident">ty</span> <span class="kw">in</span> <span class="ident">expr_types</span>.<span class="ident">values_mut</span>() {
@@ -1629,11 +1686,49 @@
         <span class="ident">ty</span>.<span class="ident">fold</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="op">|</span><span class="ident">ty</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">insert_type_vars_shallow</span>(<span class="ident">ty</span>))
     }
 
+    <span class="kw">fn</span> <span class="ident">resolve_obligations_as_possible</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="kw">let</span> <span class="ident">obligations</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">obligations</span>, <span class="ident">Vec</span>::<span class="ident">new</span>());
+        <span class="kw">for</span> <span class="ident">obligation</span> <span class="kw">in</span> <span class="ident">obligations</span> {
+            <span class="comment">// FIXME resolve types in the obligation first</span>
+            <span class="kw">let</span> (<span class="ident">solution</span>, <span class="ident">var_mapping</span>) <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">obligation</span> {
+                <span class="ident">Obligation</span>::<span class="ident">Trait</span>(<span class="ident">tr</span>) <span class="op">=&gt;</span> {
+                    <span class="kw">let</span> (<span class="ident">tr</span>, <span class="ident">var_mapping</span>) <span class="op">=</span> <span class="kw">super</span>::<span class="ident">traits</span>::<span class="ident">canonicalize</span>(<span class="ident">tr</span>.<span class="ident">clone</span>());
+                    (<span class="self">self</span>.<span class="ident">db</span>.<span class="ident">implements</span>(<span class="ident">tr</span>), <span class="ident">var_mapping</span>)
+                }
+            };
+            <span class="kw">match</span> <span class="ident">solution</span> {
+                <span class="prelude-val">Some</span>(<span class="ident">Solution</span>::<span class="ident">Unique</span>(<span class="ident">substs</span>)) <span class="op">=&gt;</span> {
+                    <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">subst</span>) <span class="kw">in</span> <span class="ident">substs</span>.<span class="number">0</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
+                        <span class="kw">let</span> <span class="ident">uncanonical</span> <span class="op">=</span> <span class="ident">var_mapping</span>[<span class="ident">i</span>];
+                        <span class="comment">// FIXME the subst may contain type variables, which would need to be mapped back as well</span>
+                        <span class="self">self</span>.<span class="ident">unify</span>(<span class="kw-2">&amp;</span><span class="ident">Ty</span>::<span class="ident">Infer</span>(<span class="ident">InferTy</span>::<span class="ident">TypeVar</span>(<span class="ident">uncanonical</span>)), <span class="ident">subst</span>);
+                    }
+                }
+                <span class="prelude-val">Some</span>(<span class="ident">Solution</span>::<span class="ident">Ambig</span>(<span class="ident">Guidance</span>::<span class="ident">Definite</span>(<span class="ident">substs</span>))) <span class="op">=&gt;</span> {
+                    <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">subst</span>) <span class="kw">in</span> <span class="ident">substs</span>.<span class="number">0</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
+                        <span class="kw">let</span> <span class="ident">uncanonical</span> <span class="op">=</span> <span class="ident">var_mapping</span>[<span class="ident">i</span>];
+                        <span class="comment">// FIXME the subst may contain type variables, which would need to be mapped back as well</span>
+                        <span class="self">self</span>.<span class="ident">unify</span>(<span class="kw-2">&amp;</span><span class="ident">Ty</span>::<span class="ident">Infer</span>(<span class="ident">InferTy</span>::<span class="ident">TypeVar</span>(<span class="ident">uncanonical</span>)), <span class="ident">subst</span>);
+                    }
+                    <span class="self">self</span>.<span class="ident">obligations</span>.<span class="ident">push</span>(<span class="ident">obligation</span>);
+                }
+                <span class="prelude-val">Some</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> {
+                    <span class="self">self</span>.<span class="ident">obligations</span>.<span class="ident">push</span>(<span class="ident">obligation</span>);
+                }
+                <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
+                    <span class="comment">// FIXME obligation cannot be fulfilled =&gt; diagnostic</span>
+                }
+            }
+        }
+    }
+
     <span class="doccomment">/// Resolves the type as far as currently possible, replacing type variables</span>
     <span class="doccomment">/// by their known types. All types returned by the infer_* functions should</span>
     <span class="doccomment">/// be resolved as far as possible, i.e. contain no type variables with</span>
     <span class="doccomment">/// known type.</span>
     <span class="kw">fn</span> <span class="ident">resolve_ty_as_possible</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">tv_stack</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">TypeVarId</span><span class="op">&gt;</span>, <span class="ident">ty</span>: <span class="ident">Ty</span>) <span class="op">-&gt;</span> <span class="ident">Ty</span> {
+        <span class="self">self</span>.<span class="ident">resolve_obligations_as_possible</span>();
+
         <span class="ident">ty</span>.<span class="ident">fold</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="op">|</span><span class="ident">ty</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">ty</span> {
             <span class="ident">Ty</span>::<span class="ident">Infer</span>(<span class="ident">tv</span>) <span class="op">=&gt;</span> {
                 <span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="ident">tv</span>.<span class="ident">to_inner</span>();
@@ -1738,6 +1833,7 @@
         <span class="kw">for</span> <span class="ident">segment</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">path</span>.<span class="ident">segments</span>[<span class="ident">remaining_index</span>..] {
             <span class="kw">let</span> <span class="ident">ty</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">resolved</span> {
                 <span class="ident">Resolution</span>::<span class="ident">Def</span>(<span class="ident">def</span>) <span class="op">=&gt;</span> {
+                    <span class="comment">// FIXME resolve associated items from traits as well</span>
                     <span class="kw">let</span> <span class="ident">typable</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TypableDef</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">def</span>.<span class="ident">into</span>();
                     <span class="kw">let</span> <span class="ident">typable</span> <span class="op">=</span> <span class="ident">typable</span><span class="question-mark">?</span>;
 
@@ -2027,13 +2123,21 @@
     <span class="kw">fn</span> <span class="ident">substs_for_method_call</span>(
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">def_generics</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">GenericParams</span><span class="op">&gt;&gt;</span>,
-        <span class="ident">generic_args</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GenericArgs</span><span class="op">&gt;</span>,
+        <span class="ident">generic_args</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">GenericArgs</span><span class="op">&gt;</span>,
+        <span class="ident">receiver_ty</span>: <span class="kw-2">&amp;</span><span class="ident">Ty</span>,
     ) <span class="op">-&gt;</span> <span class="ident">Substs</span> {
         <span class="kw">let</span> (<span class="ident">parent_param_count</span>, <span class="ident">param_count</span>) <span class="op">=</span>
-            <span class="ident">def_generics</span>.<span class="ident">map_or</span>((<span class="number">0</span>, <span class="number">0</span>), <span class="op">|</span><span class="ident">g</span><span class="op">|</span> (<span class="ident">g</span>.<span class="ident">count_parent_params</span>(), <span class="ident">g</span>.<span class="ident">params</span>.<span class="ident">len</span>()));
+            <span class="ident">def_generics</span>.<span class="ident">as_ref</span>().<span class="ident">map_or</span>((<span class="number">0</span>, <span class="number">0</span>), <span class="op">|</span><span class="ident">g</span><span class="op">|</span> (<span class="ident">g</span>.<span class="ident">count_parent_params</span>(), <span class="ident">g</span>.<span class="ident">params</span>.<span class="ident">len</span>()));
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">substs</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="ident">parent_param_count</span> <span class="op">+</span> <span class="ident">param_count</span>);
-        <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">parent_param_count</span> {
-            <span class="ident">substs</span>.<span class="ident">push</span>(<span class="ident">Ty</span>::<span class="ident">Unknown</span>);
+        <span class="comment">// Parent arguments are unknown, except for the receiver type</span>
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">parent_generics</span>) <span class="op">=</span> <span class="ident">def_generics</span>.<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">parent_params</span>.<span class="ident">clone</span>()) {
+            <span class="kw">for</span> <span class="ident">param</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">parent_generics</span>.<span class="ident">params</span> {
+                <span class="kw">if</span> <span class="ident">param</span>.<span class="ident">name</span>.<span class="ident">as_known_name</span>() <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="kw">crate</span>::<span class="ident">KnownName</span>::<span class="ident">SelfType</span>) {
+                    <span class="ident">substs</span>.<span class="ident">push</span>(<span class="ident">receiver_ty</span>.<span class="ident">clone</span>());
+                } <span class="kw">else</span> {
+                    <span class="ident">substs</span>.<span class="ident">push</span>(<span class="ident">Ty</span>::<span class="ident">Unknown</span>);
+                }
+            }
         }
         <span class="comment">// handle provided type arguments</span>
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">generic_args</span>) <span class="op">=</span> <span class="ident">generic_args</span> {
@@ -2053,6 +2157,83 @@
         }
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">substs</span>.<span class="ident">len</span>(), <span class="ident">parent_param_count</span> <span class="op">+</span> <span class="ident">param_count</span>);
         <span class="ident">Substs</span>(<span class="ident">substs</span>.<span class="ident">into</span>())
+    }
+
+    <span class="kw">fn</span> <span class="ident">register_obligations_for_call</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">callable_ty</span>: <span class="kw-2">&amp;</span><span class="ident">Ty</span>) {
+        <span class="kw">match</span> <span class="ident">callable_ty</span> {
+            <span class="ident">Ty</span>::<span class="ident">Apply</span>(<span class="ident">a_ty</span>) <span class="op">=&gt;</span> <span class="kw">match</span> <span class="ident">a_ty</span>.<span class="ident">ctor</span> {
+                <span class="ident">TypeCtor</span>::<span class="ident">FnDef</span>(<span class="ident">def</span>) <span class="op">=&gt;</span> {
+                    <span class="comment">// add obligation for trait implementation, if this is a trait method</span>
+                    <span class="comment">// FIXME also register obligations from where clauses from the trait or impl and method</span>
+                    <span class="kw">match</span> <span class="ident">def</span> {
+                        <span class="ident">CallableDef</span>::<span class="ident">Function</span>(<span class="ident">f</span>) <span class="op">=&gt;</span> {
+                            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">trait_</span>) <span class="op">=</span> <span class="ident">f</span>.<span class="ident">parent_trait</span>(<span class="self">self</span>.<span class="ident">db</span>) {
+                                <span class="comment">// construct a TraitDef</span>
+                                <span class="kw">let</span> <span class="ident">substs</span> <span class="op">=</span> <span class="ident">a_ty</span>.<span class="ident">parameters</span>.<span class="ident">prefix</span>(
+                                    <span class="ident">trait_</span>.<span class="ident">generic_params</span>(<span class="self">self</span>.<span class="ident">db</span>).<span class="ident">count_params_including_parent</span>(),
+                                );
+                                <span class="self">self</span>.<span class="ident">obligations</span>
+                                    .<span class="ident">push</span>(<span class="ident">Obligation</span>::<span class="ident">Trait</span>(<span class="ident">TraitRef</span> { <span class="ident">trait_</span>, <span class="ident">substs</span> }));
+                            }
+                        }
+                        <span class="ident">CallableDef</span>::<span class="ident">Struct</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="ident">CallableDef</span>::<span class="ident">EnumVariant</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> {}
+                    }
+                }
+                <span class="kw">_</span> <span class="op">=&gt;</span> {}
+            },
+            <span class="kw">_</span> <span class="op">=&gt;</span> {}
+        }
+    }
+
+    <span class="kw">fn</span> <span class="ident">infer_method_call</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">tgt_expr</span>: <span class="ident">ExprId</span>,
+        <span class="ident">receiver</span>: <span class="ident">ExprId</span>,
+        <span class="ident">args</span>: <span class="kw-2">&amp;</span>[<span class="ident">ExprId</span>],
+        <span class="ident">method_name</span>: <span class="kw-2">&amp;</span><span class="ident">Name</span>,
+        <span class="ident">generic_args</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">GenericArgs</span><span class="op">&gt;</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">Ty</span> {
+        <span class="kw">let</span> <span class="ident">receiver_ty</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">infer_expr</span>(<span class="ident">receiver</span>, <span class="kw-2">&amp;</span><span class="ident">Expectation</span>::<span class="ident">none</span>());
+        <span class="kw">let</span> <span class="ident">resolved</span> <span class="op">=</span> <span class="ident">receiver_ty</span>.<span class="ident">clone</span>().<span class="ident">lookup_method</span>(<span class="self">self</span>.<span class="ident">db</span>, <span class="ident">method_name</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">resolver</span>);
+        <span class="kw">let</span> (<span class="ident">derefed_receiver_ty</span>, <span class="ident">method_ty</span>, <span class="ident">def_generics</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">resolved</span> {
+            <span class="prelude-val">Some</span>((<span class="ident">ty</span>, <span class="ident">func</span>)) <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">write_method_resolution</span>(<span class="ident">tgt_expr</span>, <span class="ident">func</span>);
+                (
+                    <span class="ident">ty</span>,
+                    <span class="self">self</span>.<span class="ident">db</span>.<span class="ident">type_for_def</span>(<span class="ident">func</span>.<span class="ident">into</span>(), <span class="ident">Namespace</span>::<span class="ident">Values</span>),
+                    <span class="prelude-val">Some</span>(<span class="ident">func</span>.<span class="ident">generic_params</span>(<span class="self">self</span>.<span class="ident">db</span>)),
+                )
+            }
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> (<span class="ident">receiver_ty</span>, <span class="ident">Ty</span>::<span class="ident">Unknown</span>, <span class="prelude-val">None</span>),
+        };
+        <span class="kw">let</span> <span class="ident">substs</span> <span class="op">=</span>
+            <span class="self">self</span>.<span class="ident">substs_for_method_call</span>(<span class="ident">def_generics</span>.<span class="ident">clone</span>(), <span class="ident">generic_args</span>, <span class="kw-2">&amp;</span><span class="ident">derefed_receiver_ty</span>);
+        <span class="kw">let</span> <span class="ident">method_ty</span> <span class="op">=</span> <span class="ident">method_ty</span>.<span class="ident">apply_substs</span>(<span class="ident">substs</span>);
+        <span class="kw">let</span> <span class="ident">method_ty</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">insert_type_vars</span>(<span class="ident">method_ty</span>);
+        <span class="self">self</span>.<span class="ident">register_obligations_for_call</span>(<span class="kw-2">&amp;</span><span class="ident">method_ty</span>);
+        <span class="kw">let</span> (<span class="ident">expected_receiver_ty</span>, <span class="ident">param_tys</span>, <span class="ident">ret_ty</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">method_ty</span>.<span class="ident">callable_sig</span>(<span class="self">self</span>.<span class="ident">db</span>) {
+            <span class="prelude-val">Some</span>(<span class="ident">sig</span>) <span class="op">=&gt;</span> {
+                <span class="kw">if</span> <span class="op">!</span><span class="ident">sig</span>.<span class="ident">params</span>().<span class="ident">is_empty</span>() {
+                    (<span class="ident">sig</span>.<span class="ident">params</span>()[<span class="number">0</span>].<span class="ident">clone</span>(), <span class="ident">sig</span>.<span class="ident">params</span>()[<span class="number">1</span>..].<span class="ident">to_vec</span>(), <span class="ident">sig</span>.<span class="ident">ret</span>().<span class="ident">clone</span>())
+                } <span class="kw">else</span> {
+                    (<span class="ident">Ty</span>::<span class="ident">Unknown</span>, <span class="ident">Vec</span>::<span class="ident">new</span>(), <span class="ident">sig</span>.<span class="ident">ret</span>().<span class="ident">clone</span>())
+                }
+            }
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> (<span class="ident">Ty</span>::<span class="ident">Unknown</span>, <span class="ident">Vec</span>::<span class="ident">new</span>(), <span class="ident">Ty</span>::<span class="ident">Unknown</span>),
+        };
+        <span class="comment">// Apply autoref so the below unification works correctly</span>
+        <span class="comment">// FIXME: return correct autorefs from lookup_method</span>
+        <span class="kw">let</span> <span class="ident">actual_receiver_ty</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">expected_receiver_ty</span>.<span class="ident">as_reference</span>() {
+            <span class="prelude-val">Some</span>((<span class="kw">_</span>, <span class="ident">mutability</span>)) <span class="op">=&gt;</span> <span class="ident">Ty</span>::<span class="ident">apply_one</span>(<span class="ident">TypeCtor</span>::<span class="ident">Ref</span>(<span class="ident">mutability</span>), <span class="ident">derefed_receiver_ty</span>),
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="ident">derefed_receiver_ty</span>,
+        };
+        <span class="self">self</span>.<span class="ident">unify</span>(<span class="kw-2">&amp;</span><span class="ident">expected_receiver_ty</span>, <span class="kw-2">&amp;</span><span class="ident">actual_receiver_ty</span>);
+
+        <span class="kw">let</span> <span class="ident">param_iter</span> <span class="op">=</span> <span class="ident">param_tys</span>.<span class="ident">into_iter</span>().<span class="ident">chain</span>(<span class="ident">repeat</span>(<span class="ident">Ty</span>::<span class="ident">Unknown</span>));
+        <span class="kw">for</span> (<span class="ident">arg</span>, <span class="ident">param</span>) <span class="kw">in</span> <span class="ident">args</span>.<span class="ident">iter</span>().<span class="ident">zip</span>(<span class="ident">param_iter</span>) {
+            <span class="self">self</span>.<span class="ident">infer_expr</span>(<span class="kw-2">*</span><span class="ident">arg</span>, <span class="kw-2">&amp;</span><span class="ident">Expectation</span>::<span class="ident">has_type</span>(<span class="ident">param</span>));
+        }
+        <span class="ident">ret_ty</span>
     }
 
     <span class="kw">fn</span> <span class="ident">infer_expr</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">tgt_expr</span>: <span class="ident">ExprId</span>, <span class="ident">expected</span>: <span class="kw-2">&amp;</span><span class="ident">Expectation</span>) <span class="op">-&gt;</span> <span class="ident">Ty</span> {
@@ -2111,102 +2292,23 @@
             }
             <span class="ident">Expr</span>::<span class="ident">Call</span> { <span class="ident">callee</span>, <span class="ident">args</span> } <span class="op">=&gt;</span> {
                 <span class="kw">let</span> <span class="ident">callee_ty</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">infer_expr</span>(<span class="kw-2">*</span><span class="ident">callee</span>, <span class="kw-2">&amp;</span><span class="ident">Expectation</span>::<span class="ident">none</span>());
-                <span class="kw">let</span> (<span class="ident">param_tys</span>, <span class="ident">ret_ty</span>) <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">callee_ty</span> {
-                    <span class="ident">Ty</span>::<span class="ident">Apply</span>(<span class="ident">a_ty</span>) <span class="op">=&gt;</span> <span class="kw">match</span> <span class="ident">a_ty</span>.<span class="ident">ctor</span> {
-                        <span class="ident">TypeCtor</span>::<span class="ident">FnPtr</span> <span class="op">=&gt;</span> {
-                            <span class="kw">let</span> <span class="ident">sig</span> <span class="op">=</span> <span class="ident">FnSig</span>::<span class="ident">from_fn_ptr_substs</span>(<span class="kw-2">&amp;</span><span class="ident">a_ty</span>.<span class="ident">parameters</span>);
-                            (<span class="ident">sig</span>.<span class="ident">params</span>().<span class="ident">to_vec</span>(), <span class="ident">sig</span>.<span class="ident">ret</span>().<span class="ident">clone</span>())
-                        }
-                        <span class="ident">TypeCtor</span>::<span class="ident">FnDef</span>(<span class="ident">def</span>) <span class="op">=&gt;</span> {
-                            <span class="kw">let</span> <span class="ident">sig</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">db</span>.<span class="ident">callable_item_signature</span>(<span class="ident">def</span>);
-                            <span class="kw">let</span> <span class="ident">ret_ty</span> <span class="op">=</span> <span class="ident">sig</span>.<span class="ident">ret</span>().<span class="ident">clone</span>().<span class="ident">subst</span>(<span class="kw-2">&amp;</span><span class="ident">a_ty</span>.<span class="ident">parameters</span>);
-                            <span class="kw">let</span> <span class="ident">param_tys</span> <span class="op">=</span> <span class="ident">sig</span>
-                                .<span class="ident">params</span>()
-                                .<span class="ident">iter</span>()
-                                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">ty</span><span class="op">|</span> <span class="ident">ty</span>.<span class="ident">clone</span>().<span class="ident">subst</span>(<span class="kw-2">&amp;</span><span class="ident">a_ty</span>.<span class="ident">parameters</span>))
-                                .<span class="ident">collect</span>();
-                            (<span class="ident">param_tys</span>, <span class="ident">ret_ty</span>)
-                        }
-                        <span class="kw">_</span> <span class="op">=&gt;</span> (<span class="ident">Vec</span>::<span class="ident">new</span>(), <span class="ident">Ty</span>::<span class="ident">Unknown</span>),
-                    },
-                    <span class="kw">_</span> <span class="op">=&gt;</span> {
-                        <span class="comment">// not callable</span>
-                        <span class="comment">// FIXME report an error?</span>
+                <span class="kw">let</span> (<span class="ident">param_tys</span>, <span class="ident">ret_ty</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">callee_ty</span>.<span class="ident">callable_sig</span>(<span class="self">self</span>.<span class="ident">db</span>) {
+                    <span class="prelude-val">Some</span>(<span class="ident">sig</span>) <span class="op">=&gt;</span> (<span class="ident">sig</span>.<span class="ident">params</span>().<span class="ident">to_vec</span>(), <span class="ident">sig</span>.<span class="ident">ret</span>().<span class="ident">clone</span>()),
+                    <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
+                        <span class="comment">// Not callable</span>
+                        <span class="comment">// FIXME: report an error</span>
                         (<span class="ident">Vec</span>::<span class="ident">new</span>(), <span class="ident">Ty</span>::<span class="ident">Unknown</span>)
                     }
                 };
+                <span class="comment">// FIXME register obligations from where clauses from the function</span>
                 <span class="kw">let</span> <span class="ident">param_iter</span> <span class="op">=</span> <span class="ident">param_tys</span>.<span class="ident">into_iter</span>().<span class="ident">chain</span>(<span class="ident">repeat</span>(<span class="ident">Ty</span>::<span class="ident">Unknown</span>));
                 <span class="kw">for</span> (<span class="ident">arg</span>, <span class="ident">param</span>) <span class="kw">in</span> <span class="ident">args</span>.<span class="ident">iter</span>().<span class="ident">zip</span>(<span class="ident">param_iter</span>) {
                     <span class="self">self</span>.<span class="ident">infer_expr</span>(<span class="kw-2">*</span><span class="ident">arg</span>, <span class="kw-2">&amp;</span><span class="ident">Expectation</span>::<span class="ident">has_type</span>(<span class="ident">param</span>));
                 }
                 <span class="ident">ret_ty</span>
             }
-            <span class="ident">Expr</span>::<span class="ident">MethodCall</span> { <span class="ident">receiver</span>, <span class="ident">args</span>, <span class="ident">method_name</span>, <span class="ident">generic_args</span> } <span class="op">=&gt;</span> {
-                <span class="kw">let</span> <span class="ident">receiver_ty</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">infer_expr</span>(<span class="kw-2">*</span><span class="ident">receiver</span>, <span class="kw-2">&amp;</span><span class="ident">Expectation</span>::<span class="ident">none</span>());
-                <span class="kw">let</span> <span class="ident">resolved</span> <span class="op">=</span>
-                    <span class="ident">receiver_ty</span>.<span class="ident">clone</span>().<span class="ident">lookup_method</span>(<span class="self">self</span>.<span class="ident">db</span>, <span class="ident">method_name</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">resolver</span>);
-                <span class="kw">let</span> (<span class="ident">derefed_receiver_ty</span>, <span class="ident">method_ty</span>, <span class="ident">def_generics</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">resolved</span> {
-                    <span class="prelude-val">Some</span>((<span class="ident">ty</span>, <span class="ident">func</span>)) <span class="op">=&gt;</span> {
-                        <span class="self">self</span>.<span class="ident">write_method_resolution</span>(<span class="ident">tgt_expr</span>, <span class="ident">func</span>);
-                        (
-                            <span class="ident">ty</span>,
-                            <span class="self">self</span>.<span class="ident">db</span>.<span class="ident">type_for_def</span>(<span class="ident">func</span>.<span class="ident">into</span>(), <span class="ident">Namespace</span>::<span class="ident">Values</span>),
-                            <span class="prelude-val">Some</span>(<span class="ident">func</span>.<span class="ident">generic_params</span>(<span class="self">self</span>.<span class="ident">db</span>)),
-                        )
-                    }
-                    <span class="prelude-val">None</span> <span class="op">=&gt;</span> (<span class="ident">receiver_ty</span>, <span class="ident">Ty</span>::<span class="ident">Unknown</span>, <span class="prelude-val">None</span>),
-                };
-                <span class="kw">let</span> <span class="ident">substs</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">substs_for_method_call</span>(<span class="ident">def_generics</span>, <span class="ident">generic_args</span>);
-                <span class="kw">let</span> <span class="ident">method_ty</span> <span class="op">=</span> <span class="ident">method_ty</span>.<span class="ident">apply_substs</span>(<span class="ident">substs</span>);
-                <span class="kw">let</span> <span class="ident">method_ty</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">insert_type_vars</span>(<span class="ident">method_ty</span>);
-                <span class="kw">let</span> (<span class="ident">expected_receiver_ty</span>, <span class="ident">param_tys</span>, <span class="ident">ret_ty</span>) <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">method_ty</span> {
-                    <span class="ident">Ty</span>::<span class="ident">Apply</span>(<span class="ident">a_ty</span>) <span class="op">=&gt;</span> <span class="kw">match</span> <span class="ident">a_ty</span>.<span class="ident">ctor</span> {
-                        <span class="ident">TypeCtor</span>::<span class="ident">FnPtr</span> <span class="op">=&gt;</span> {
-                            <span class="kw">let</span> <span class="ident">sig</span> <span class="op">=</span> <span class="ident">FnSig</span>::<span class="ident">from_fn_ptr_substs</span>(<span class="kw-2">&amp;</span><span class="ident">a_ty</span>.<span class="ident">parameters</span>);
-                            <span class="kw">if</span> <span class="op">!</span><span class="ident">sig</span>.<span class="ident">params</span>().<span class="ident">is_empty</span>() {
-                                (
-                                    <span class="ident">sig</span>.<span class="ident">params</span>()[<span class="number">0</span>].<span class="ident">clone</span>(),
-                                    <span class="ident">sig</span>.<span class="ident">params</span>()[<span class="number">1</span>..].<span class="ident">to_vec</span>(),
-                                    <span class="ident">sig</span>.<span class="ident">ret</span>().<span class="ident">clone</span>(),
-                                )
-                            } <span class="kw">else</span> {
-                                (<span class="ident">Ty</span>::<span class="ident">Unknown</span>, <span class="ident">Vec</span>::<span class="ident">new</span>(), <span class="ident">sig</span>.<span class="ident">ret</span>().<span class="ident">clone</span>())
-                            }
-                        }
-                        <span class="ident">TypeCtor</span>::<span class="ident">FnDef</span>(<span class="ident">def</span>) <span class="op">=&gt;</span> {
-                            <span class="kw">let</span> <span class="ident">sig</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">db</span>.<span class="ident">callable_item_signature</span>(<span class="ident">def</span>);
-                            <span class="kw">let</span> <span class="ident">ret_ty</span> <span class="op">=</span> <span class="ident">sig</span>.<span class="ident">ret</span>().<span class="ident">clone</span>().<span class="ident">subst</span>(<span class="kw-2">&amp;</span><span class="ident">a_ty</span>.<span class="ident">parameters</span>);
-
-                            <span class="kw">if</span> <span class="op">!</span><span class="ident">sig</span>.<span class="ident">params</span>().<span class="ident">is_empty</span>() {
-                                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">params_iter</span> <span class="op">=</span> <span class="ident">sig</span>
-                                    .<span class="ident">params</span>()
-                                    .<span class="ident">iter</span>()
-                                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">ty</span><span class="op">|</span> <span class="ident">ty</span>.<span class="ident">clone</span>().<span class="ident">subst</span>(<span class="kw-2">&amp;</span><span class="ident">a_ty</span>.<span class="ident">parameters</span>));
-                                <span class="kw">let</span> <span class="ident">receiver_ty</span> <span class="op">=</span> <span class="ident">params_iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>();
-                                (<span class="ident">receiver_ty</span>, <span class="ident">params_iter</span>.<span class="ident">collect</span>(), <span class="ident">ret_ty</span>)
-                            } <span class="kw">else</span> {
-                                (<span class="ident">Ty</span>::<span class="ident">Unknown</span>, <span class="ident">Vec</span>::<span class="ident">new</span>(), <span class="ident">ret_ty</span>)
-                            }
-                        }
-                        <span class="kw">_</span> <span class="op">=&gt;</span> (<span class="ident">Ty</span>::<span class="ident">Unknown</span>, <span class="ident">Vec</span>::<span class="ident">new</span>(), <span class="ident">Ty</span>::<span class="ident">Unknown</span>),
-                    },
-                    <span class="kw">_</span> <span class="op">=&gt;</span> (<span class="ident">Ty</span>::<span class="ident">Unknown</span>, <span class="ident">Vec</span>::<span class="ident">new</span>(), <span class="ident">Ty</span>::<span class="ident">Unknown</span>),
-                };
-                <span class="comment">// Apply autoref so the below unification works correctly</span>
-                <span class="kw">let</span> <span class="ident">actual_receiver_ty</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">expected_receiver_ty</span>.<span class="ident">as_reference</span>() {
-                    <span class="prelude-val">Some</span>((<span class="kw">_</span>, <span class="ident">mutability</span>)) <span class="op">=&gt;</span> {
-                        <span class="ident">Ty</span>::<span class="ident">apply_one</span>(<span class="ident">TypeCtor</span>::<span class="ident">Ref</span>(<span class="ident">mutability</span>), <span class="ident">derefed_receiver_ty</span>)
-                    }
-                    <span class="kw">_</span> <span class="op">=&gt;</span> <span class="ident">derefed_receiver_ty</span>,
-                };
-                <span class="self">self</span>.<span class="ident">unify</span>(<span class="kw-2">&amp;</span><span class="ident">expected_receiver_ty</span>, <span class="kw-2">&amp;</span><span class="ident">actual_receiver_ty</span>);
-
-                <span class="kw">let</span> <span class="ident">param_iter</span> <span class="op">=</span> <span class="ident">param_tys</span>.<span class="ident">into_iter</span>().<span class="ident">chain</span>(<span class="ident">repeat</span>(<span class="ident">Ty</span>::<span class="ident">Unknown</span>));
-                <span class="kw">for</span> (<span class="ident">arg</span>, <span class="ident">param</span>) <span class="kw">in</span> <span class="ident">args</span>.<span class="ident">iter</span>().<span class="ident">zip</span>(<span class="ident">param_iter</span>) {
-                    <span class="self">self</span>.<span class="ident">infer_expr</span>(<span class="kw-2">*</span><span class="ident">arg</span>, <span class="kw-2">&amp;</span><span class="ident">Expectation</span>::<span class="ident">has_type</span>(<span class="ident">param</span>));
-                }
-                <span class="ident">ret_ty</span>
-            }
+            <span class="ident">Expr</span>::<span class="ident">MethodCall</span> { <span class="ident">receiver</span>, <span class="ident">args</span>, <span class="ident">method_name</span>, <span class="ident">generic_args</span> } <span class="op">=&gt;</span> <span class="self">self</span>
+                .<span class="ident">infer_method_call</span>(<span class="ident">tgt_expr</span>, <span class="kw-2">*</span><span class="ident">receiver</span>, <span class="kw-2">&amp;</span><span class="ident">args</span>, <span class="kw-2">&amp;</span><span class="ident">method_name</span>, <span class="ident">generic_args</span>.<span class="ident">as_ref</span>()),
             <span class="ident">Expr</span>::<span class="ident">Match</span> { <span class="ident">expr</span>, <span class="ident">arms</span> } <span class="op">=&gt;</span> {
                 <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">expected</span>.<span class="ident">ty</span> <span class="op">==</span> <span class="ident">Ty</span>::<span class="ident">Unknown</span> {
                     <span class="ident">Expectation</span>::<span class="ident">has_type</span>(<span class="self">self</span>.<span class="ident">new_type_var</span>())
@@ -2498,7 +2600,7 @@
 
 <span class="doccomment">/// The ID of a type variable.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TypeVarId</span>(<span class="ident">u32</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TypeVarId</span>(<span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">u32</span>);
 
 <span class="kw">impl</span> <span class="ident">UnifyKey</span> <span class="kw">for</span> <span class="ident">TypeVarId</span> {
     <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">TypeVarValue</span>;

@@ -754,6 +754,36 @@
 <span id="754">754</span>
 <span id="755">755</span>
 <span id="756">756</span>
+<span id="757">757</span>
+<span id="758">758</span>
+<span id="759">759</span>
+<span id="760">760</span>
+<span id="761">761</span>
+<span id="762">762</span>
+<span id="763">763</span>
+<span id="764">764</span>
+<span id="765">765</span>
+<span id="766">766</span>
+<span id="767">767</span>
+<span id="768">768</span>
+<span id="769">769</span>
+<span id="770">770</span>
+<span id="771">771</span>
+<span id="772">772</span>
+<span id="773">773</span>
+<span id="774">774</span>
+<span id="775">775</span>
+<span id="776">776</span>
+<span id="777">777</span>
+<span id="778">778</span>
+<span id="779">779</span>
+<span id="780">780</span>
+<span id="781">781</span>
+<span id="782">782</span>
+<span id="783">783</span>
+<span id="784">784</span>
+<span id="785">785</span>
+<span id="786">786</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">Arc</span>;
 
@@ -768,7 +798,7 @@
     <span class="ident">expr</span>::{<span class="ident">Body</span>, <span class="ident">BodySourceMap</span>},
     <span class="ident">ty</span>::<span class="ident">InferenceResult</span>,
     <span class="ident">adt</span>::{<span class="ident">EnumVariantId</span>, <span class="ident">StructFieldId</span>, <span class="ident">VariantDef</span>},
-    <span class="ident">generics</span>::<span class="ident">GenericParams</span>,
+    <span class="ident">generics</span>::<span class="ident">HasGenericParams</span>,
     <span class="ident">docs</span>::{<span class="ident">Documentation</span>, <span class="ident">Docs</span>, <span class="ident">docs_from_ast</span>},
     <span class="ident">ids</span>::{<span class="ident">FunctionId</span>, <span class="ident">StructId</span>, <span class="ident">EnumId</span>, <span class="ident">AstItemDef</span>, <span class="ident">ConstId</span>, <span class="ident">StaticId</span>, <span class="ident">TraitId</span>, <span class="ident">TypeAliasId</span>},
     <span class="ident">impl_block</span>::<span class="ident">ImplBlock</span>,
@@ -946,12 +976,12 @@
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">resolver</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">HirDatabase</span>) <span class="op">-&gt;</span> <span class="ident">Resolver</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">resolver</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">DefDatabase</span>) <span class="op">-&gt;</span> <span class="ident">Resolver</span> {
         <span class="kw">let</span> <span class="ident">def_map</span> <span class="op">=</span> <span class="ident">db</span>.<span class="ident">crate_def_map</span>(<span class="self">self</span>.<span class="ident">krate</span>);
         <span class="ident">Resolver</span>::<span class="ident">default</span>().<span class="ident">push_module_scope</span>(<span class="ident">def_map</span>, <span class="self">self</span>.<span class="ident">module_id</span>)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">declarations</span>(<span class="self">self</span>, <span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">HirDatabase</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ModuleDef</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">declarations</span>(<span class="self">self</span>, <span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">DefDatabase</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ModuleDef</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">def_map</span> <span class="op">=</span> <span class="ident">db</span>.<span class="ident">crate_def_map</span>(<span class="self">self</span>.<span class="ident">krate</span>);
         <span class="ident">def_map</span>[<span class="self">self</span>.<span class="ident">module_id</span>]
             .<span class="ident">scope</span>
@@ -1056,10 +1086,6 @@
             .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">id</span>, <span class="kw">_</span>)<span class="op">|</span> <span class="ident">StructField</span> { <span class="ident">parent</span>: (<span class="kw-2">*</span><span class="self">self</span>).<span class="ident">into</span>(), <span class="ident">id</span> })
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generic_params</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">DefDatabase</span>) <span class="op">-&gt;</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">GenericParams</span><span class="op">&gt;</span> {
-        <span class="ident">db</span>.<span class="ident">generic_params</span>((<span class="kw-2">*</span><span class="self">self</span>).<span class="ident">into</span>())
-    }
-
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">HirDatabase</span>) <span class="op">-&gt;</span> <span class="ident">Ty</span> {
         <span class="ident">db</span>.<span class="ident">type_for_def</span>((<span class="kw-2">*</span><span class="self">self</span>).<span class="ident">into</span>(), <span class="ident">Namespace</span>::<span class="ident">Types</span>)
     }
@@ -1118,10 +1144,6 @@
             .<span class="ident">iter</span>()
             .<span class="ident">find</span>(<span class="op">|</span>(<span class="ident">_id</span>, <span class="ident">data</span>)<span class="op">|</span> <span class="ident">data</span>.<span class="ident">name</span>.<span class="ident">as_ref</span>() <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="ident">name</span>))
             .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">id</span>, <span class="kw">_</span>)<span class="op">|</span> <span class="ident">EnumVariant</span> { <span class="ident">parent</span>: <span class="kw-2">*</span><span class="self">self</span>, <span class="ident">id</span> })
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generic_params</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">DefDatabase</span>) <span class="op">-&gt;</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">GenericParams</span><span class="op">&gt;</span> {
-        <span class="ident">db</span>.<span class="ident">generic_params</span>((<span class="kw-2">*</span><span class="self">self</span>).<span class="ident">into</span>())
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">HirDatabase</span>) <span class="op">-&gt;</span> <span class="ident">Ty</span> {
@@ -1294,24 +1316,32 @@
         <span class="ident">db</span>.<span class="ident">infer</span>((<span class="kw-2">*</span><span class="self">self</span>).<span class="ident">into</span>())
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generic_params</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">DefDatabase</span>) <span class="op">-&gt;</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">GenericParams</span><span class="op">&gt;</span> {
-        <span class="ident">db</span>.<span class="ident">generic_params</span>((<span class="kw-2">*</span><span class="self">self</span>).<span class="ident">into</span>())
-    }
-
     <span class="doccomment">/// The containing impl block, if this is a method.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">impl_block</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">DefDatabase</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImplBlock</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">module_impls</span> <span class="op">=</span> <span class="ident">db</span>.<span class="ident">impls_in_module</span>(<span class="self">self</span>.<span class="ident">module</span>(<span class="ident">db</span>));
         <span class="ident">ImplBlock</span>::<span class="ident">containing</span>(<span class="ident">module_impls</span>, (<span class="kw-2">*</span><span class="self">self</span>).<span class="ident">into</span>())
     }
 
+    <span class="doccomment">/// The containing trait, if this is a trait method definition.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parent_trait</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">DefDatabase</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Trait</span><span class="op">&gt;</span> {
+        <span class="ident">db</span>.<span class="ident">trait_items_index</span>(<span class="self">self</span>.<span class="ident">module</span>(<span class="ident">db</span>)).<span class="ident">get_parent_trait</span>((<span class="kw-2">*</span><span class="self">self</span>).<span class="ident">into</span>())
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">container</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">DefDatabase</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Container</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">impl_block</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">impl_block</span>(<span class="ident">db</span>) {
+            <span class="prelude-val">Some</span>(<span class="ident">impl_block</span>.<span class="ident">into</span>())
+        } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">trait_</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">parent_trait</span>(<span class="ident">db</span>) {
+            <span class="prelude-val">Some</span>(<span class="ident">trait_</span>.<span class="ident">into</span>())
+        } <span class="kw">else</span> {
+            <span class="prelude-val">None</span>
+        }
+    }
+
     <span class="comment">// FIXME: move to a more general type for &#39;body-having&#39; items</span>
     <span class="doccomment">/// Builds a resolver for code inside this item.</span>
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">resolver</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">HirDatabase</span>) <span class="op">-&gt;</span> <span class="ident">Resolver</span> {
         <span class="comment">// take the outer scope...</span>
-        <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">impl_block</span>(<span class="ident">db</span>)
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">ib</span><span class="op">|</span> <span class="ident">ib</span>.<span class="ident">resolver</span>(<span class="ident">db</span>))
-            .<span class="ident">unwrap_or_else</span>(<span class="op">||</span> <span class="self">self</span>.<span class="ident">module</span>(<span class="ident">db</span>).<span class="ident">resolver</span>(<span class="ident">db</span>));
+        <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">container</span>(<span class="ident">db</span>).<span class="ident">map_or_else</span>(<span class="op">||</span> <span class="self">self</span>.<span class="ident">module</span>(<span class="ident">db</span>).<span class="ident">resolver</span>(<span class="ident">db</span>), <span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">resolver</span>(<span class="ident">db</span>));
         <span class="comment">// ...and add generic params, if present</span>
         <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">generic_params</span>(<span class="ident">db</span>);
         <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">params</span>.<span class="ident">is_empty</span>() { <span class="ident">r</span>.<span class="ident">push_generic_params_scope</span>(<span class="ident">p</span>) } <span class="kw">else</span> { <span class="ident">r</span> };
@@ -1441,10 +1471,6 @@
         <span class="self">self</span>.<span class="ident">id</span>.<span class="ident">module</span>(<span class="ident">db</span>)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generic_params</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">DefDatabase</span>) <span class="op">-&gt;</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">GenericParams</span><span class="op">&gt;</span> {
-        <span class="ident">db</span>.<span class="ident">generic_params</span>((<span class="kw-2">*</span><span class="self">self</span>).<span class="ident">into</span>())
-    }
-
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">name</span>(<span class="self">self</span>, <span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">DefDatabase</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Name</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">trait_data</span>(<span class="ident">db</span>).<span class="ident">name</span>().<span class="ident">clone</span>()
     }
@@ -1455,6 +1481,14 @@
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">trait_data</span>(<span class="self">self</span>, <span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">DefDatabase</span>) <span class="op">-&gt;</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">TraitData</span><span class="op">&gt;</span> {
         <span class="ident">db</span>.<span class="ident">trait_data</span>(<span class="self">self</span>)
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">resolver</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">DefDatabase</span>) <span class="op">-&gt;</span> <span class="ident">Resolver</span> {
+        <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">module</span>(<span class="ident">db</span>).<span class="ident">resolver</span>(<span class="ident">db</span>);
+        <span class="comment">// add generic params, if present</span>
+        <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">generic_params</span>(<span class="ident">db</span>);
+        <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">params</span>.<span class="ident">is_empty</span>() { <span class="ident">r</span>.<span class="ident">push_generic_params_scope</span>(<span class="ident">p</span>) } <span class="kw">else</span> { <span class="ident">r</span> };
+        <span class="ident">r</span>
     }
 }
 
@@ -1474,10 +1508,6 @@
         <span class="self">self</span>.<span class="ident">id</span>.<span class="ident">source</span>(<span class="ident">db</span>)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generic_params</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">DefDatabase</span>) <span class="op">-&gt;</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">GenericParams</span><span class="op">&gt;</span> {
-        <span class="ident">db</span>.<span class="ident">generic_params</span>((<span class="kw-2">*</span><span class="self">self</span>).<span class="ident">into</span>())
-    }
-
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">module</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">DefDatabase</span>) <span class="op">-&gt;</span> <span class="ident">Module</span> {
         <span class="self">self</span>.<span class="ident">id</span>.<span class="ident">module</span>(<span class="ident">db</span>)
     }
@@ -1486,6 +1516,21 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">impl_block</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">DefDatabase</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImplBlock</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">module_impls</span> <span class="op">=</span> <span class="ident">db</span>.<span class="ident">impls_in_module</span>(<span class="self">self</span>.<span class="ident">module</span>(<span class="ident">db</span>));
         <span class="ident">ImplBlock</span>::<span class="ident">containing</span>(<span class="ident">module_impls</span>, (<span class="kw-2">*</span><span class="self">self</span>).<span class="ident">into</span>())
+    }
+
+    <span class="doccomment">/// The containing trait, if this is a trait method definition.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parent_trait</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">DefDatabase</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Trait</span><span class="op">&gt;</span> {
+        <span class="ident">db</span>.<span class="ident">trait_items_index</span>(<span class="self">self</span>.<span class="ident">module</span>(<span class="ident">db</span>)).<span class="ident">get_parent_trait</span>((<span class="kw-2">*</span><span class="self">self</span>).<span class="ident">into</span>())
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">container</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">DefDatabase</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Container</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">impl_block</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">impl_block</span>(<span class="ident">db</span>) {
+            <span class="prelude-val">Some</span>(<span class="ident">impl_block</span>.<span class="ident">into</span>())
+        } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">trait_</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">parent_trait</span>(<span class="ident">db</span>) {
+            <span class="prelude-val">Some</span>(<span class="ident">trait_</span>.<span class="ident">into</span>())
+        } <span class="kw">else</span> {
+            <span class="prelude-val">None</span>
+        }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">type_ref</span>(<span class="self">self</span>, <span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">DefDatabase</span>) <span class="op">-&gt;</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">TypeRef</span><span class="op">&gt;</span> {
@@ -1509,6 +1554,21 @@
 <span class="kw">impl</span> <span class="ident">Docs</span> <span class="kw">for</span> <span class="ident">TypeAlias</span> {
     <span class="kw">fn</span> <span class="ident">docs</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">HirDatabase</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Documentation</span><span class="op">&gt;</span> {
         <span class="ident">docs_from_ast</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">source</span>(<span class="ident">db</span>).<span class="number">1</span>)
+    }
+}
+
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Container</span> {
+    <span class="ident">Trait</span>(<span class="ident">Trait</span>),
+    <span class="ident">ImplBlock</span>(<span class="ident">ImplBlock</span>),
+}
+<span class="macro">impl_froms</span><span class="macro">!</span>(<span class="ident">Container</span>: <span class="ident">Trait</span>, <span class="ident">ImplBlock</span>);
+
+<span class="kw">impl</span> <span class="ident">Container</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">resolver</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">DefDatabase</span>) <span class="op">-&gt;</span> <span class="ident">Resolver</span> {
+        <span class="kw">match</span> <span class="self">self</span> {
+            <span class="ident">Container</span>::<span class="ident">Trait</span>(<span class="ident">trait_</span>) <span class="op">=&gt;</span> <span class="ident">trait_</span>.<span class="ident">resolver</span>(<span class="ident">db</span>),
+            <span class="ident">Container</span>::<span class="ident">ImplBlock</span>(<span class="ident">impl_block</span>) <span class="op">=&gt;</span> <span class="ident">impl_block</span>.<span class="ident">resolver</span>(<span class="ident">db</span>),
+        }
     }
 }
 </pre></div>
