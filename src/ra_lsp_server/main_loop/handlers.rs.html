@@ -812,6 +812,9 @@
 <span id="812">812</span>
 <span id="813">813</span>
 <span id="814">814</span>
+<span id="815">815</span>
+<span id="816">816</span>
+<span id="817">817</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">gen_lsp_server</span>::<span class="ident">ErrorCode</span>;
 <span class="kw">use</span> <span class="ident">lsp_types</span>::{
@@ -827,6 +830,7 @@
     <span class="ident">AssistId</span>,
 };
 <span class="kw">use</span> <span class="ident">ra_syntax</span>::{<span class="ident">AstNode</span>, <span class="ident">SyntaxKind</span>, <span class="ident">TextUnit</span>};
+<span class="kw">use</span> <span class="ident">ra_prof</span>::<span class="ident">profile</span>;
 <span class="kw">use</span> <span class="ident">rustc_hash</span>::<span class="ident">FxHashMap</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>};
 <span class="kw">use</span> <span class="ident">serde_json</span>::<span class="ident">to_value</span>;
@@ -1143,6 +1147,7 @@
     <span class="ident">world</span>: <span class="ident">ServerWorld</span>,
     <span class="ident">params</span>: <span class="ident">req</span>::<span class="ident">CompletionParams</span>,
 ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">req</span>::<span class="ident">CompletionResponse</span><span class="op">&gt;&gt;</span> {
+    <span class="kw">let</span> <span class="ident">_p</span> <span class="op">=</span> <span class="ident">profile</span>(<span class="string">&quot;handle_completion&quot;</span>);
     <span class="kw">let</span> <span class="ident">position</span> <span class="op">=</span> {
         <span class="kw">let</span> <span class="ident">file_id</span> <span class="op">=</span> <span class="ident">params</span>.<span class="ident">text_document</span>.<span class="ident">try_conv_with</span>(<span class="kw-2">&amp;</span><span class="ident">world</span>)<span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">line_index</span> <span class="op">=</span> <span class="ident">world</span>.<span class="ident">analysis</span>().<span class="ident">file_line_index</span>(<span class="ident">file_id</span>);
@@ -1379,6 +1384,7 @@
     <span class="ident">world</span>: <span class="ident">ServerWorld</span>,
     <span class="ident">params</span>: <span class="ident">req</span>::<span class="ident">CodeActionParams</span>,
 ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CodeActionResponse</span><span class="op">&gt;&gt;</span> {
+    <span class="kw">let</span> <span class="ident">_p</span> <span class="op">=</span> <span class="ident">profile</span>(<span class="string">&quot;handle_code_action&quot;</span>);
     <span class="kw">let</span> <span class="ident">file_id</span> <span class="op">=</span> <span class="ident">params</span>.<span class="ident">text_document</span>.<span class="ident">try_conv_with</span>(<span class="kw-2">&amp;</span><span class="ident">world</span>)<span class="question-mark">?</span>;
     <span class="kw">let</span> <span class="ident">line_index</span> <span class="op">=</span> <span class="ident">world</span>.<span class="ident">analysis</span>().<span class="ident">file_line_index</span>(<span class="ident">file_id</span>);
     <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="ident">params</span>.<span class="ident">range</span>.<span class="ident">conv_with</span>(<span class="kw-2">&amp;</span><span class="ident">line_index</span>);
