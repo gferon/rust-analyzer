@@ -433,6 +433,156 @@
 <span id="433">433</span>
 <span id="434">434</span>
 <span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
+<span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
+<span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">/// `mbe` (short for Macro By Example) crate contains code for handling</span>
 <span class="doccomment">/// `macro_rules` macros. It uses `TokenTree` (from `ra_tt` package) as the</span>
@@ -475,7 +625,7 @@
     <span class="ident">BindingError</span>(<span class="ident">String</span>),
 }
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">syntax_bridge</span>::{<span class="ident">ast_to_token_tree</span>, <span class="ident">token_tree_to_ast_item_list</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">syntax_bridge</span>::{<span class="ident">ast_to_token_tree</span>, <span class="ident">token_tree_to_ast_item_list</span>, <span class="ident">syntax_node_to_token_tree</span>};
 
 <span class="doccomment">/// This struct contains AST for a single `macro_rules` definition. What might</span>
 <span class="doccomment">/// be very confusing is that AST has almost exactly the same shape as</span>
@@ -625,9 +775,26 @@ impl_froms!(TokenTree: Leaf, Subtree);
         <span class="ident">rules</span>.<span class="ident">expand</span>(<span class="kw-2">&amp;</span><span class="ident">invocation_tt</span>).<span class="ident">unwrap</span>()
     }
 
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">expand_to_syntax</span>(
+        <span class="ident">rules</span>: <span class="kw-2">&amp;</span><span class="ident">MacroRules</span>,
+        <span class="ident">invocation</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">ra_syntax</span>::<span class="ident">TreeArc</span><span class="op">&lt;</span><span class="ident">ast</span>::<span class="ident">SourceFile</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">expanded</span> <span class="op">=</span> <span class="ident">expand</span>(<span class="ident">rules</span>, <span class="ident">invocation</span>);
+        <span class="ident">token_tree_to_ast_item_list</span>(<span class="kw-2">&amp;</span><span class="ident">expanded</span>)
+    }
+
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">assert_expansion</span>(<span class="ident">rules</span>: <span class="kw-2">&amp;</span><span class="ident">MacroRules</span>, <span class="ident">invocation</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">expansion</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) {
         <span class="kw">let</span> <span class="ident">expanded</span> <span class="op">=</span> <span class="ident">expand</span>(<span class="ident">rules</span>, <span class="ident">invocation</span>);
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">expanded</span>.<span class="ident">to_string</span>(), <span class="ident">expansion</span>);
+
+        <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="ident">token_tree_to_ast_item_list</span>(<span class="kw-2">&amp;</span><span class="ident">expanded</span>);
+
+        <span class="comment">// Eat all white space by parse it back and forth</span>
+        <span class="kw">let</span> <span class="ident">expansion</span> <span class="op">=</span> <span class="ident">ast</span>::<span class="ident">SourceFile</span>::<span class="ident">parse</span>(<span class="ident">expansion</span>);
+        <span class="kw">let</span> <span class="ident">expansion</span> <span class="op">=</span> <span class="ident">syntax_node_to_token_tree</span>(<span class="ident">expansion</span>.<span class="ident">syntax</span>()).<span class="ident">unwrap</span>().<span class="number">0</span>;
+        <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="ident">token_tree_to_ast_item_list</span>(<span class="kw-2">&amp;</span><span class="ident">expansion</span>);
+
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">tree</span>.<span class="ident">syntax</span>().<span class="ident">debug_dump</span>().<span class="ident">trim</span>(), <span class="ident">file</span>.<span class="ident">syntax</span>().<span class="ident">debug_dump</span>().<span class="ident">trim</span>());
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -721,6 +888,36 @@ impl_froms!(TokenTree: Leaf, Subtree);
         <span class="ident">assert_expansion</span>(<span class="kw-2">&amp;</span><span class="ident">rules</span>, <span class="string">&quot;foo! { foo, bar }&quot;</span>, <span class="string">&quot;mod foo {} mod bar {}&quot;</span>);
         <span class="ident">assert_expansion</span>(<span class="kw-2">&amp;</span><span class="ident">rules</span>, <span class="string">&quot;foo! { foo# bar }&quot;</span>, <span class="string">&quot;fn foo () {} fn bar () {}&quot;</span>);
         <span class="ident">assert_expansion</span>(<span class="kw-2">&amp;</span><span class="ident">rules</span>, <span class="string">&quot;foo! { Foo,# Bar }&quot;</span>, <span class="string">&quot;struct Foo ; struct Bar ;&quot;</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_match_group_pattern_with_multiple_defs</span>() {
+        <span class="kw">let</span> <span class="ident">rules</span> <span class="op">=</span> <span class="ident">create_rules</span>(
+            <span class="string">r#&quot;
+        macro_rules! foo {
+            ($ ($ i:ident),*) =&gt; ( struct Bar { $ (
+                fn $ i {}
+            )*} );            
+        }
+&quot;#</span>,
+        );
+
+        <span class="ident">assert_expansion</span>(<span class="kw-2">&amp;</span><span class="ident">rules</span>, <span class="string">&quot;foo! { foo, bar }&quot;</span>, <span class="string">&quot;struct Bar {fn foo {} fn bar {}}&quot;</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_match_group_pattern_with_multiple_statement</span>() {
+        <span class="kw">let</span> <span class="ident">rules</span> <span class="op">=</span> <span class="ident">create_rules</span>(
+            <span class="string">r#&quot;
+        macro_rules! foo {
+            ($ ($ i:ident),*) =&gt; ( fn baz { $ (
+                $ i ();
+            )*} );            
+        }
+&quot;#</span>,
+        );
+
+        <span class="ident">assert_expansion</span>(<span class="kw-2">&amp;</span><span class="ident">rules</span>, <span class="string">&quot;foo! { foo, bar }&quot;</span>, <span class="string">&quot;fn baz {foo () ; bar () ;}&quot;</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -851,7 +1048,7 @@ SOURCE_FILE@[0; 40)
         <span class="ident">assert_expansion</span>(
             <span class="kw-2">&amp;</span><span class="ident">rules</span>,
             <span class="string">&quot;foo! { bar::&lt;u8&gt;::baz::&lt;u8&gt; }&quot;</span>,
-            <span class="string">&quot;fn foo () {let a = bar ::&lt; u8 &gt; ::baz ::&lt; u8 &gt; ;}&quot;</span>,
+            <span class="string">&quot;fn foo () {let a = bar :: &lt; u8 &gt; :: baz :: &lt; u8 &gt; ;}&quot;</span>,
         );
     }
 
@@ -867,6 +1064,109 @@ SOURCE_FILE@[0; 40)
 &quot;#</span>,
         );
         <span class="ident">assert_expansion</span>(<span class="kw-2">&amp;</span><span class="ident">rules</span>, <span class="string">&quot;foo! { foo, bar }&quot;</span>, <span class="string">&quot;fn foo () {let a = foo ; let b = bar ;}&quot;</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_path_with_path</span>() {
+        <span class="kw">let</span> <span class="ident">rules</span> <span class="op">=</span> <span class="ident">create_rules</span>(
+            <span class="string">r#&quot;
+        macro_rules! foo {
+            ($ i:path) =&gt; {
+                fn foo() { let a = $ i :: bar; }
+            }
+        }
+&quot;#</span>,
+        );
+        <span class="ident">assert_expansion</span>(<span class="kw-2">&amp;</span><span class="ident">rules</span>, <span class="string">&quot;foo! { foo }&quot;</span>, <span class="string">&quot;fn foo () {let a = foo :: bar ;}&quot;</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_expr</span>() {
+        <span class="kw">let</span> <span class="ident">rules</span> <span class="op">=</span> <span class="ident">create_rules</span>(
+            <span class="string">r#&quot;
+        macro_rules! foo {
+            ($ i:expr) =&gt; {
+                 fn bar() { $ i; } 
+            }
+        }
+&quot;#</span>,
+        );
+
+        <span class="ident">assert_expansion</span>(
+            <span class="kw-2">&amp;</span><span class="ident">rules</span>,
+            <span class="string">&quot;foo! { 2 + 2 * baz(3).quux() }&quot;</span>,
+            <span class="string">&quot;fn bar () {2 + 2 * baz (3) . quux () ;}&quot;</span>,
+        );
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_expr_order</span>() {
+        <span class="kw">let</span> <span class="ident">rules</span> <span class="op">=</span> <span class="ident">create_rules</span>(
+            <span class="string">r#&quot;
+        macro_rules! foo {
+            ($ i:expr) =&gt; {
+                 fn bar() { $ i * 2; } 
+            }
+        }
+&quot;#</span>,
+        );
+
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="ident">expand_to_syntax</span>(<span class="kw-2">&amp;</span><span class="ident">rules</span>, <span class="string">&quot;foo! { 1 + 1  }&quot;</span>).<span class="ident">syntax</span>().<span class="ident">debug_dump</span>().<span class="ident">trim</span>(),
+            <span class="string">r#&quot;SOURCE_FILE@[0; 15)
+  FN_DEF@[0; 15)
+    FN_KW@[0; 2) &quot;fn&quot;
+    NAME@[2; 5)
+      IDENT@[2; 5) &quot;bar&quot;
+    PARAM_LIST@[5; 7)
+      L_PAREN@[5; 6) &quot;(&quot;
+      R_PAREN@[6; 7) &quot;)&quot;
+    BLOCK@[7; 15)
+      L_CURLY@[7; 8) &quot;{&quot;
+      EXPR_STMT@[8; 14)
+        BIN_EXPR@[8; 13)
+          BIN_EXPR@[8; 11)
+            LITERAL@[8; 9)
+              INT_NUMBER@[8; 9) &quot;1&quot;
+            PLUS@[9; 10) &quot;+&quot;
+            LITERAL@[10; 11)
+              INT_NUMBER@[10; 11) &quot;1&quot;
+          STAR@[11; 12) &quot;*&quot;
+          LITERAL@[12; 13)
+            INT_NUMBER@[12; 13) &quot;2&quot;
+        SEMI@[13; 14) &quot;;&quot;
+      R_CURLY@[14; 15) &quot;}&quot;&quot;#</span>,
+        );
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_ty</span>() {
+        <span class="kw">let</span> <span class="ident">rules</span> <span class="op">=</span> <span class="ident">create_rules</span>(
+            <span class="string">r#&quot;
+        macro_rules! foo {
+            ($ i:ty) =&gt; (
+                fn bar() -&gt; $ i { unimplemented!() }
+            )
+        }
+&quot;#</span>,
+        );
+        <span class="ident">assert_expansion</span>(
+            <span class="kw-2">&amp;</span><span class="ident">rules</span>,
+            <span class="string">&quot;foo! { Baz&lt;u8&gt; }&quot;</span>,
+            <span class="string">&quot;fn bar () -&gt; Baz &lt; u8 &gt; {unimplemented ! ()}&quot;</span>,
+        );
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_pat_</span>() {
+        <span class="kw">let</span> <span class="ident">rules</span> <span class="op">=</span> <span class="ident">create_rules</span>(
+            <span class="string">r#&quot;
+        macro_rules! foo {
+            ($ i:pat) =&gt; { fn foo() { let $ i; } }
+        }
+&quot;#</span>,
+        );
+        <span class="ident">assert_expansion</span>(<span class="kw-2">&amp;</span><span class="ident">rules</span>, <span class="string">&quot;foo! { (a, b) }&quot;</span>, <span class="string">&quot;fn foo () {let (a , b) ;}&quot;</span>);
     }
 }
 </pre></div>

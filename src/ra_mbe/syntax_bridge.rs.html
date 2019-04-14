@@ -192,6 +192,21 @@
 <span id="192">192</span>
 <span id="193">193</span>
 <span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">ra_parser</span>::{<span class="ident">TreeSink</span>, <span class="ident">ParseError</span>};
 <span class="kw">use</span> <span class="ident">ra_syntax</span>::{
@@ -213,6 +228,14 @@
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ast_to_token_tree</span>(<span class="ident">ast</span>: <span class="kw-2">&amp;</span><span class="ident">ast</span>::<span class="ident">TokenTree</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">tt</span>::<span class="ident">Subtree</span>, <span class="ident">TokenMap</span>)<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">token_map</span> <span class="op">=</span> <span class="ident">TokenMap</span>::<span class="ident">default</span>();
     <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">ast</span>.<span class="ident">syntax</span>();
+    <span class="kw">let</span> <span class="ident">tt</span> <span class="op">=</span> <span class="ident">convert_tt</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">token_map</span>, <span class="ident">node</span>.<span class="ident">range</span>().<span class="ident">start</span>(), <span class="ident">node</span>)<span class="question-mark">?</span>;
+    <span class="prelude-val">Some</span>((<span class="ident">tt</span>, <span class="ident">token_map</span>))
+}
+
+<span class="doccomment">/// Convert the syntax node to a `TokenTree` (what macro</span>
+<span class="doccomment">/// will consume).</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">syntax_node_to_token_tree</span>(<span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">tt</span>::<span class="ident">Subtree</span>, <span class="ident">TokenMap</span>)<span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">token_map</span> <span class="op">=</span> <span class="ident">TokenMap</span>::<span class="ident">default</span>();
     <span class="kw">let</span> <span class="ident">tt</span> <span class="op">=</span> <span class="ident">convert_tt</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">token_map</span>, <span class="ident">node</span>.<span class="ident">range</span>().<span class="ident">start</span>(), <span class="ident">node</span>)<span class="question-mark">?</span>;
     <span class="prelude-val">Some</span>((<span class="ident">tt</span>, <span class="ident">token_map</span>))
 }
@@ -246,15 +269,17 @@
 ) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">tt</span>::<span class="ident">Subtree</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">first_child</span> <span class="op">=</span> <span class="ident">tt</span>.<span class="ident">first_child_or_token</span>()<span class="question-mark">?</span>;
     <span class="kw">let</span> <span class="ident">last_child</span> <span class="op">=</span> <span class="ident">tt</span>.<span class="ident">last_child_or_token</span>()<span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="ident">delimiter</span> <span class="op">=</span> <span class="kw">match</span> (<span class="ident">first_child</span>.<span class="ident">kind</span>(), <span class="ident">last_child</span>.<span class="ident">kind</span>()) {
-        (<span class="ident">L_PAREN</span>, <span class="ident">R_PAREN</span>) <span class="op">=&gt;</span> <span class="ident">tt</span>::<span class="ident">Delimiter</span>::<span class="ident">Parenthesis</span>,
-        (<span class="ident">L_CURLY</span>, <span class="ident">R_CURLY</span>) <span class="op">=&gt;</span> <span class="ident">tt</span>::<span class="ident">Delimiter</span>::<span class="ident">Brace</span>,
-        (<span class="ident">L_BRACK</span>, <span class="ident">R_BRACK</span>) <span class="op">=&gt;</span> <span class="ident">tt</span>::<span class="ident">Delimiter</span>::<span class="ident">Bracket</span>,
-        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">None</span>,
+    <span class="kw">let</span> (<span class="ident">delimiter</span>, <span class="ident">skip_first</span>) <span class="op">=</span> <span class="kw">match</span> (<span class="ident">first_child</span>.<span class="ident">kind</span>(), <span class="ident">last_child</span>.<span class="ident">kind</span>()) {
+        (<span class="ident">L_PAREN</span>, <span class="ident">R_PAREN</span>) <span class="op">=&gt;</span> (<span class="ident">tt</span>::<span class="ident">Delimiter</span>::<span class="ident">Parenthesis</span>, <span class="bool-val">true</span>),
+        (<span class="ident">L_CURLY</span>, <span class="ident">R_CURLY</span>) <span class="op">=&gt;</span> (<span class="ident">tt</span>::<span class="ident">Delimiter</span>::<span class="ident">Brace</span>, <span class="bool-val">true</span>),
+        (<span class="ident">L_BRACK</span>, <span class="ident">R_BRACK</span>) <span class="op">=&gt;</span> (<span class="ident">tt</span>::<span class="ident">Delimiter</span>::<span class="ident">Bracket</span>, <span class="bool-val">true</span>),
+        <span class="kw">_</span> <span class="op">=&gt;</span> (<span class="ident">tt</span>::<span class="ident">Delimiter</span>::<span class="prelude-val">None</span>, <span class="bool-val">false</span>),
     };
+
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">token_trees</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
-    <span class="kw">for</span> <span class="ident">child</span> <span class="kw">in</span> <span class="ident">tt</span>.<span class="ident">children_with_tokens</span>().<span class="ident">skip</span>(<span class="number">1</span>) {
-        <span class="kw">if</span> <span class="ident">child</span> <span class="op">==</span> <span class="ident">first_child</span> <span class="op">||</span> <span class="ident">child</span> <span class="op">==</span> <span class="ident">last_child</span> <span class="op">||</span> <span class="ident">child</span>.<span class="ident">kind</span>().<span class="ident">is_trivia</span>() {
+    <span class="kw">for</span> <span class="ident">child</span> <span class="kw">in</span> <span class="ident">tt</span>.<span class="ident">children_with_tokens</span>().<span class="ident">skip</span>(<span class="ident">skip_first</span> <span class="kw">as</span> <span class="ident">usize</span>) {
+        <span class="kw">if</span> (<span class="ident">skip_first</span> <span class="op">&amp;&amp;</span> (<span class="ident">child</span> <span class="op">==</span> <span class="ident">first_child</span> <span class="op">||</span> <span class="ident">child</span> <span class="op">==</span> <span class="ident">last_child</span>)) <span class="op">||</span> <span class="ident">child</span>.<span class="ident">kind</span>().<span class="ident">is_trivia</span>()
+        {
             <span class="kw">continue</span>;
         }
         <span class="kw">match</span> <span class="ident">child</span> {
@@ -322,6 +347,11 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Q</span>: <span class="ident">Querier</span><span class="op">&gt;</span> <span class="ident">TreeSink</span> <span class="kw">for</span> <span class="ident">TtTreeSink</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Q</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">token</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">kind</span>: <span class="ident">SyntaxKind</span>, <span class="ident">n_tokens</span>: <span class="ident">u8</span>) {
+        <span class="kw">if</span> <span class="ident">kind</span> <span class="op">==</span> <span class="ident">L_DOLLAR</span> <span class="op">||</span> <span class="ident">kind</span> <span class="op">==</span> <span class="ident">R_DOLLAR</span> {
+            <span class="self">self</span>.<span class="ident">token_pos</span> <span class="op">+=</span> <span class="ident">n_tokens</span> <span class="kw">as</span> <span class="ident">usize</span>;
+            <span class="kw">return</span>;
+        }
+
         <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">n_tokens</span> {
             <span class="self">self</span>.<span class="ident">buf</span> <span class="op">+=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">src_querier</span>.<span class="ident">token</span>(<span class="self">self</span>.<span class="ident">token_pos</span>).<span class="number">1</span>;
             <span class="self">self</span>.<span class="ident">token_pos</span> <span class="op">+=</span> <span class="number">1</span>;
@@ -371,20 +401,20 @@
 
         <span class="kw">let</span> <span class="ident">query</span> <span class="op">=</span> <span class="ident">tt_src</span>.<span class="ident">querier</span>();
 
-        <span class="comment">// [{]</span>
+        <span class="comment">// [${]</span>
         <span class="comment">// [let] [a] [=] [&#39;c&#39;] [;]</span>
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">query</span>.<span class="ident">token</span>(<span class="number">1</span> <span class="op">+</span> <span class="number">3</span>).<span class="number">1</span>, <span class="string">&quot;&#39;c&#39;&quot;</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">query</span>.<span class="ident">token</span>(<span class="number">1</span> <span class="op">+</span> <span class="number">3</span>).<span class="number">0</span>, <span class="ident">CHAR</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">query</span>.<span class="ident">token</span>(<span class="number">2</span> <span class="op">+</span> <span class="number">3</span>).<span class="number">1</span>, <span class="string">&quot;&#39;c&#39;&quot;</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">query</span>.<span class="ident">token</span>(<span class="number">2</span> <span class="op">+</span> <span class="number">3</span>).<span class="number">0</span>, <span class="ident">CHAR</span>);
         <span class="comment">// [let] [c] [=] [1000] [;]</span>
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">query</span>.<span class="ident">token</span>(<span class="number">1</span> <span class="op">+</span> <span class="number">5</span> <span class="op">+</span> <span class="number">3</span>).<span class="number">1</span>, <span class="string">&quot;1000&quot;</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">query</span>.<span class="ident">token</span>(<span class="number">1</span> <span class="op">+</span> <span class="number">5</span> <span class="op">+</span> <span class="number">3</span>).<span class="number">0</span>, <span class="ident">INT_NUMBER</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">query</span>.<span class="ident">token</span>(<span class="number">2</span> <span class="op">+</span> <span class="number">5</span> <span class="op">+</span> <span class="number">3</span>).<span class="number">1</span>, <span class="string">&quot;1000&quot;</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">query</span>.<span class="ident">token</span>(<span class="number">2</span> <span class="op">+</span> <span class="number">5</span> <span class="op">+</span> <span class="number">3</span>).<span class="number">0</span>, <span class="ident">INT_NUMBER</span>);
         <span class="comment">// [let] [f] [=] [12E+99_f64] [;]</span>
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">query</span>.<span class="ident">token</span>(<span class="number">1</span> <span class="op">+</span> <span class="number">10</span> <span class="op">+</span> <span class="number">3</span>).<span class="number">1</span>, <span class="string">&quot;12E+99_f64&quot;</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">query</span>.<span class="ident">token</span>(<span class="number">1</span> <span class="op">+</span> <span class="number">10</span> <span class="op">+</span> <span class="number">3</span>).<span class="number">0</span>, <span class="ident">FLOAT_NUMBER</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">query</span>.<span class="ident">token</span>(<span class="number">2</span> <span class="op">+</span> <span class="number">10</span> <span class="op">+</span> <span class="number">3</span>).<span class="number">1</span>, <span class="string">&quot;12E+99_f64&quot;</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">query</span>.<span class="ident">token</span>(<span class="number">2</span> <span class="op">+</span> <span class="number">10</span> <span class="op">+</span> <span class="number">3</span>).<span class="number">0</span>, <span class="ident">FLOAT_NUMBER</span>);
 
         <span class="comment">// [let] [s] [=] [&quot;rust1&quot;] [;]</span>
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">query</span>.<span class="ident">token</span>(<span class="number">1</span> <span class="op">+</span> <span class="number">15</span> <span class="op">+</span> <span class="number">3</span>).<span class="number">1</span>, <span class="string">&quot;\&quot;rust1\&quot;&quot;</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">query</span>.<span class="ident">token</span>(<span class="number">1</span> <span class="op">+</span> <span class="number">15</span> <span class="op">+</span> <span class="number">3</span>).<span class="number">0</span>, <span class="ident">STRING</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">query</span>.<span class="ident">token</span>(<span class="number">2</span> <span class="op">+</span> <span class="number">15</span> <span class="op">+</span> <span class="number">3</span>).<span class="number">1</span>, <span class="string">&quot;\&quot;rust1\&quot;&quot;</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">query</span>.<span class="ident">token</span>(<span class="number">2</span> <span class="op">+</span> <span class="number">15</span> <span class="op">+</span> <span class="number">3</span>).<span class="number">0</span>, <span class="ident">STRING</span>);
     }
 }
 </pre></div>
