@@ -288,6 +288,18 @@
 <span id="288">288</span>
 <span id="289">289</span>
 <span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">mod</span> <span class="ident">cargo_workspace</span>;
 <span class="kw">mod</span> <span class="ident">json_project</span>;
@@ -545,6 +557,18 @@
             }
         }
         <span class="ident">crate_graph</span>
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">workspace_root_for</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Path</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span> {
+            <span class="ident">ProjectWorkspace</span>::<span class="ident">Cargo</span> { <span class="ident">cargo</span>, .. } <span class="op">=&gt;</span> {
+                <span class="prelude-val">Some</span>(<span class="ident">cargo</span>.<span class="ident">workspace_root</span>.<span class="ident">as_ref</span>()).<span class="ident">filter</span>(<span class="op">|</span><span class="ident">root</span><span class="op">|</span> <span class="ident">path</span>.<span class="ident">starts_with</span>(<span class="ident">root</span>))
+            }
+            <span class="ident">ProjectWorkspace</span>::<span class="ident">Json</span> { <span class="ident">project</span>: <span class="ident">JsonProject</span> { <span class="ident">roots</span>, .. } } <span class="op">=&gt;</span> <span class="ident">roots</span>
+                .<span class="ident">iter</span>()
+                .<span class="ident">find</span>(<span class="op">|</span><span class="ident">root</span><span class="op">|</span> <span class="ident">path</span>.<span class="ident">starts_with</span>(<span class="kw-2">&amp;</span><span class="ident">root</span>.<span class="ident">path</span>))
+                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">root</span><span class="op">|</span> <span class="ident">root</span>.<span class="ident">path</span>.<span class="ident">as_ref</span>()),
+        }
     }
 }
 
