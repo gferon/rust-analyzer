@@ -70,6 +70,10 @@
 <span id="70">70</span>
 <span id="71">71</span>
 <span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">subtree_source</span>::<span class="ident">SubtreeTokenSource</span>;
 
@@ -113,6 +117,10 @@
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_pat</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">tt</span>::<span class="ident">TokenTree</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">parse</span>(<span class="ident">ra_parser</span>::<span class="ident">parse_pat</span>)
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_stmt</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">tt</span>::<span class="ident">TokenTree</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">parse</span>(<span class="op">|</span><span class="ident">src</span>, <span class="ident">sink</span><span class="op">|</span> <span class="ident">ra_parser</span>::<span class="ident">parse_stmt</span>(<span class="ident">src</span>, <span class="ident">sink</span>, <span class="bool-val">false</span>))
     }
 
     <span class="kw">fn</span> <span class="ident">parse</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">tt</span>::<span class="ident">TokenTree</span><span class="op">&gt;</span>
