@@ -56,8 +56,6 @@
 <span id="56">56</span>
 <span id="57">57</span>
 <span id="58">58</span>
-<span id="59">59</span>
-<span id="60">60</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">io</span>::{<span class="ident">stdin</span>, <span class="ident">stdout</span>},
@@ -88,9 +86,7 @@
                 <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
             };
 
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span> <span class="ident">reader_sender</span>.<span class="ident">send</span>(<span class="ident">msg</span>) {
-                <span class="kw">break</span>;
-            }
+            <span class="ident">reader_sender</span>.<span class="ident">send</span>(<span class="ident">msg</span>).<span class="ident">unwrap</span>();
 
             <span class="kw">if</span> <span class="ident">is_exit</span> {
                 <span class="kw">break</span>;
