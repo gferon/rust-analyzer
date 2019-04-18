@@ -598,6 +598,50 @@
 <span id="598">598</span>
 <span id="599">599</span>
 <span id="600">600</span>
+<span id="601">601</span>
+<span id="602">602</span>
+<span id="603">603</span>
+<span id="604">604</span>
+<span id="605">605</span>
+<span id="606">606</span>
+<span id="607">607</span>
+<span id="608">608</span>
+<span id="609">609</span>
+<span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
+<span id="613">613</span>
+<span id="614">614</span>
+<span id="615">615</span>
+<span id="616">616</span>
+<span id="617">617</span>
+<span id="618">618</span>
+<span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
+<span id="622">622</span>
+<span id="623">623</span>
+<span id="624">624</span>
+<span id="625">625</span>
+<span id="626">626</span>
+<span id="627">627</span>
+<span id="628">628</span>
+<span id="629">629</span>
+<span id="630">630</span>
+<span id="631">631</span>
+<span id="632">632</span>
+<span id="633">633</span>
+<span id="634">634</span>
+<span id="635">635</span>
+<span id="636">636</span>
+<span id="637">637</span>
+<span id="638">638</span>
+<span id="639">639</span>
+<span id="640">640</span>
+<span id="641">641</span>
+<span id="642">642</span>
+<span id="643">643</span>
+<span id="644">644</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">/// `mbe` (short for Macro By Example) crate contains code for handling</span>
 <span class="doccomment">/// `macro_rules` macros. It uses `TokenTree` (from `ra_tt` package) as the</span>
@@ -1197,6 +1241,50 @@ SOURCE_FILE@[0; 40)
         );
         <span class="ident">assert_expansion</span>(<span class="kw-2">&amp;</span><span class="ident">rules</span>, <span class="string">&quot;foo! { 2 }&quot;</span>, <span class="string">&quot;fn bar () {2 ;}&quot;</span>);
         <span class="ident">assert_expansion</span>(<span class="kw-2">&amp;</span><span class="ident">rules</span>, <span class="string">&quot;foo! { let a = 0 }&quot;</span>, <span class="string">&quot;fn bar () {let a = 0 ;}&quot;</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_single_item</span>() {
+        <span class="kw">let</span> <span class="ident">rules</span> <span class="op">=</span> <span class="ident">create_rules</span>(
+            <span class="string">r#&quot;
+        macro_rules! foo {
+            ($ i:item) =&gt; (
+                $ i
+            )
+        }
+&quot;#</span>,
+        );
+        <span class="ident">assert_expansion</span>(<span class="kw-2">&amp;</span><span class="ident">rules</span>, <span class="string">&quot;foo! {mod c {}}&quot;</span>, <span class="string">&quot;mod c {}&quot;</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_all_items</span>() {
+        <span class="kw">let</span> <span class="ident">rules</span> <span class="op">=</span> <span class="ident">create_rules</span>(
+            <span class="string">r#&quot;
+        macro_rules! foo {
+            ($ ($ i:item)*) =&gt; ($ (
+                $ i
+            )*)
+        }
+&quot;#</span>,
+        );
+        <span class="ident">assert_expansion</span>(<span class="kw-2">&amp;</span><span class="ident">rules</span>, <span class="string">r#&quot;
+        foo! {
+            extern crate a;
+            mod b;
+            mod c {}
+            use d;
+            const E: i32 = 0;
+            static F: i32 = 0;
+            impl G {}
+            struct H;
+            enum I { Foo }
+            trait J {}
+            fn h() {}
+            extern {}
+            type T = u8;
+        }
+&quot;#</span>, <span class="string">r#&quot;extern crate a ; mod b ; mod c {} use d ; const E : i32 = 0 ; static F : i32 = 0 ; impl G {} struct H ; enum I {Foo} trait J {} fn h () {} extern {} type T = u8 ;&quot;#</span>);
     }
 }
 </pre></div>

@@ -317,6 +317,14 @@
 <span id="317">317</span>
 <span id="318">318</span>
 <span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">/// This module takes a (parsed) definition of `macro_rules` invocation, a</span>
 <span class="doccomment">/// `tt::TokenTree` representing an argument of macro invocation, and produces a</span>
@@ -481,6 +489,11 @@
                             <span class="kw">let</span> <span class="ident">pat</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">eat_stmt</span>().<span class="ident">ok_or</span>(<span class="ident">ExpandError</span>::<span class="ident">UnexpectedToken</span>)<span class="question-mark">?</span>.<span class="ident">clone</span>();
                             <span class="ident">res</span>.<span class="ident">inner</span>.<span class="ident">insert</span>(<span class="ident">text</span>.<span class="ident">clone</span>(), <span class="ident">Binding</span>::<span class="ident">Simple</span>(<span class="ident">pat</span>.<span class="ident">into</span>()));
                         }
+                        <span class="string">&quot;item&quot;</span> <span class="op">=&gt;</span> {
+                            <span class="kw">let</span> <span class="ident">item</span> <span class="op">=</span>
+                                <span class="ident">input</span>.<span class="ident">eat_item</span>().<span class="ident">ok_or</span>(<span class="ident">ExpandError</span>::<span class="ident">UnexpectedToken</span>)<span class="question-mark">?</span>.<span class="ident">clone</span>();
+                            <span class="ident">res</span>.<span class="ident">inner</span>.<span class="ident">insert</span>(<span class="ident">text</span>.<span class="ident">clone</span>(), <span class="ident">Binding</span>::<span class="ident">Simple</span>(<span class="ident">item</span>.<span class="ident">into</span>()));
+                        }
                         <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ExpandError</span>::<span class="ident">UnexpectedToken</span>),
                     }
                 }
@@ -598,6 +611,9 @@
 
         <span class="ident">assert_err</span>(<span class="string">&quot;($i) =&gt; ($i)&quot;</span>, <span class="string">&quot;foo!{a}&quot;</span>, <span class="ident">ExpandError</span>::<span class="ident">UnexpectedToken</span>);
         <span class="ident">assert_err</span>(<span class="string">&quot;($i:) =&gt; ($i)&quot;</span>, <span class="string">&quot;foo!{a}&quot;</span>, <span class="ident">ExpandError</span>::<span class="ident">UnexpectedToken</span>);
+
+        <span class="comment">// FIXME:</span>
+        <span class="comment">// Add an err test case for ($($i:ident)) =&gt; ($())</span>
     }
 
     <span class="kw">fn</span> <span class="ident">assert_err</span>(<span class="ident">macro_body</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">invocation</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">err</span>: <span class="ident">ExpandError</span>) {
