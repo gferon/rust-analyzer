@@ -642,6 +642,30 @@
 <span id="642">642</span>
 <span id="643">643</span>
 <span id="644">644</span>
+<span id="645">645</span>
+<span id="646">646</span>
+<span id="647">647</span>
+<span id="648">648</span>
+<span id="649">649</span>
+<span id="650">650</span>
+<span id="651">651</span>
+<span id="652">652</span>
+<span id="653">653</span>
+<span id="654">654</span>
+<span id="655">655</span>
+<span id="656">656</span>
+<span id="657">657</span>
+<span id="658">658</span>
+<span id="659">659</span>
+<span id="660">660</span>
+<span id="661">661</span>
+<span id="662">662</span>
+<span id="663">663</span>
+<span id="664">664</span>
+<span id="665">665</span>
+<span id="666">666</span>
+<span id="667">667</span>
+<span id="668">668</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">/// `mbe` (short for Macro By Example) crate contains code for handling</span>
 <span class="doccomment">/// `macro_rules` macros. It uses `TokenTree` (from `ra_tt` package) as the</span>
@@ -1195,6 +1219,30 @@ SOURCE_FILE@[0; 40)
             INT_NUMBER@[12; 13) &quot;2&quot;
         SEMI@[13; 14) &quot;;&quot;
       R_CURLY@[14; 15) &quot;}&quot;&quot;#</span>,
+        );
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_last_expr</span>() {
+        <span class="kw">let</span> <span class="ident">rules</span> <span class="op">=</span> <span class="ident">create_rules</span>(
+            <span class="string">r#&quot;
+        macro_rules! vec {
+            ($($item:expr),*) =&gt; {
+                {
+                    let mut v = Vec::new();
+                    $(
+                        v.push($item);
+                    )*
+                    v
+                }
+            };
+        }
+&quot;#</span>,
+        );
+        <span class="ident">assert_expansion</span>(
+            <span class="kw-2">&amp;</span><span class="ident">rules</span>,
+            <span class="string">&quot;vec!(1,2,3)&quot;</span>,
+            <span class="string">&quot;{let mut v = Vec :: new () ; v . push (1) ; v . push (2) ; v . push (3) ; v}&quot;</span>,
         );
     }
 
