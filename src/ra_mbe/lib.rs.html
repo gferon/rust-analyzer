@@ -1589,29 +1589,29 @@ MACRO_ITEMS@[0; 40)
         );
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_tt_block</span>() {
-        <span class="kw">let</span> <span class="ident">rules</span> <span class="op">=</span> <span class="ident">create_rules</span>(
-            <span class="string">r#&quot;
-        macro_rules! foo {
-            ($ i:tt) =&gt; { fn foo() $ i }
-        }
-&quot;#</span>,
-        );
-        <span class="ident">assert_expansion</span>(<span class="kw-2">&amp;</span><span class="ident">rules</span>, <span class="string">r#&quot;foo! { { 1; } }&quot;#</span>, <span class="string">r#&quot;fn foo () {1 ;}&quot;#</span>);
-    }
+    <span class="comment">//     #[test]</span>
+    <span class="comment">//     fn test_tt_block() {</span>
+    <span class="comment">//         let rules = create_rules(</span>
+    <span class="comment">//             r#&quot;</span>
+    <span class="comment">//         macro_rules! foo {</span>
+    <span class="comment">//             ($ i:tt) =&gt; { fn foo() $ i }</span>
+    <span class="comment">//         }</span>
+    <span class="comment">// &quot;#,</span>
+    <span class="comment">//         );</span>
+    <span class="comment">//         assert_expansion(&amp;rules, r#&quot;foo! { { 1; } }&quot;#, r#&quot;fn foo () {1 ;}&quot;#);</span>
+    <span class="comment">//     }</span>
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_tt_group</span>() {
-        <span class="kw">let</span> <span class="ident">rules</span> <span class="op">=</span> <span class="ident">create_rules</span>(
-            <span class="string">r#&quot;
-        macro_rules! foo {
-             ($($ i:tt)*) =&gt; { $($ i)* }
-        }
-&quot;#</span>,
-        );
-        <span class="ident">assert_expansion</span>(<span class="kw-2">&amp;</span><span class="ident">rules</span>, <span class="string">r#&quot;foo! { fn foo() {} }&quot;#</span>, <span class="string">r#&quot;fn foo () {}&quot;#</span>);
-    }
+    <span class="comment">//     #[test]</span>
+    <span class="comment">//     fn test_tt_group() {</span>
+    <span class="comment">//         let rules = create_rules(</span>
+    <span class="comment">//             r#&quot;</span>
+    <span class="comment">//         macro_rules! foo {</span>
+    <span class="comment">//              ($($ i:tt)*) =&gt; { $($ i)* }</span>
+    <span class="comment">//         }</span>
+    <span class="comment">// &quot;#,</span>
+    <span class="comment">//         );</span>
+    <span class="comment">//         assert_expansion(&amp;rules, r#&quot;foo! { fn foo() {} }&quot;#, r#&quot;fn foo () {}&quot;#);</span>
+    <span class="comment">//     }</span>
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_lifetime</span>() {
