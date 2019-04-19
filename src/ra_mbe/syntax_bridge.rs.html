@@ -273,6 +273,9 @@
 <span id="273">273</span>
 <span id="274">274</span>
 <span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">ra_parser</span>::{<span class="ident">TreeSink</span>, <span class="ident">ParseError</span>};
 <span class="kw">use</span> <span class="ident">ra_syntax</span>::{
@@ -433,7 +436,10 @@
                         );
                     }
                 } <span class="kw">else</span> {
-                    <span class="kw">let</span> <span class="ident">child</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">token</span>.<span class="ident">kind</span>().<span class="ident">is_keyword</span>() <span class="op">||</span> <span class="ident">token</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">IDENT</span> {
+                    <span class="kw">let</span> <span class="ident">child</span>: <span class="ident">tt</span>::<span class="ident">TokenTree</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">token</span>.<span class="ident">kind</span>().<span class="ident">is_keyword</span>()
+                        <span class="op">||</span> <span class="ident">token</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">IDENT</span>
+                        <span class="op">||</span> <span class="ident">token</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">LIFETIME</span>
+                    {
                         <span class="kw">let</span> <span class="ident">relative_range</span> <span class="op">=</span> <span class="ident">token</span>.<span class="ident">range</span>() <span class="op">-</span> <span class="ident">global_offset</span>;
                         <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">token_map</span>.<span class="ident">alloc</span>(<span class="ident">relative_range</span>);
                         <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="ident">token</span>.<span class="ident">text</span>().<span class="ident">clone</span>();

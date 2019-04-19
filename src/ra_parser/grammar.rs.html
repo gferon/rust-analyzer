@@ -252,6 +252,37 @@
 <span id="252">252</span>
 <span id="253">253</span>
 <span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! This is the actual &quot;grammar&quot; of the Rust language.</span>
 <span class="doccomment">//!</span>
@@ -350,6 +381,37 @@
     <span class="ident">expressions</span>::<span class="ident">stmt</span>(<span class="ident">p</span>, <span class="ident">with_semi</span>)
 }
 
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">block</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Parser</span>) {
+    <span class="ident">expressions</span>::<span class="ident">block</span>(<span class="ident">p</span>);
+}
+
+<span class="comment">// Parse a meta item , which excluded [], e.g : #[ MetaItem ]</span>
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">meta_item</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Parser</span>) {
+    <span class="kw">fn</span> <span class="ident">is_delimiter</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Parser</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">match</span> <span class="ident">p</span>.<span class="ident">current</span>() {
+            <span class="ident">L_CURLY</span> <span class="op">|</span> <span class="ident">L_PAREN</span> <span class="op">|</span> <span class="ident">L_BRACK</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+        }
+    }
+
+    <span class="kw">if</span> <span class="ident">is_delimiter</span>(<span class="ident">p</span>) {
+        <span class="ident">items</span>::<span class="ident">token_tree</span>(<span class="ident">p</span>);
+        <span class="kw">return</span>;
+    }
+
+    <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">start</span>();
+    <span class="kw">while</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">at</span>(<span class="ident">EOF</span>) {
+        <span class="kw">if</span> <span class="ident">is_delimiter</span>(<span class="ident">p</span>) {
+            <span class="ident">items</span>::<span class="ident">token_tree</span>(<span class="ident">p</span>);
+            <span class="kw">break</span>;
+        } <span class="kw">else</span> {
+            <span class="ident">p</span>.<span class="ident">bump</span>();
+        }
+    }
+
+    <span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">TOKEN_TREE</span>);
+}
+
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">item</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Parser</span>) {
     <span class="ident">items</span>::<span class="ident">item_or_macro</span>(<span class="ident">p</span>, <span class="bool-val">true</span>, <span class="ident">items</span>::<span class="ident">ItemFlavor</span>::<span class="ident">Mod</span>)
 }
@@ -391,7 +453,7 @@
     }
 }
 
-<span class="kw">fn</span> <span class="ident">opt_visibility</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Parser</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">opt_visibility</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Parser</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
     <span class="kw">match</span> <span class="ident">p</span>.<span class="ident">current</span>() {
         <span class="ident">PUB_KW</span> <span class="op">=&gt;</span> {
             <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">start</span>();

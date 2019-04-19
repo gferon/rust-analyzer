@@ -131,6 +131,22 @@
 <span id="131">131</span>
 <span id="132">132</span>
 <span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! The Rust parser.</span>
 <span class="doccomment">//!</span>
@@ -227,9 +243,25 @@
     <span class="ident">parse_from_tokens</span>(<span class="ident">token_source</span>, <span class="ident">tree_sink</span>, <span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">grammar</span>::<span class="ident">stmt</span>(<span class="ident">p</span>, <span class="ident">with_semi</span>));
 }
 
+<span class="doccomment">/// Parse given tokens into the given sink as a block</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_block</span>(<span class="ident">token_source</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">TokenSource</span>, <span class="ident">tree_sink</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">TreeSink</span>) {
+    <span class="ident">parse_from_tokens</span>(<span class="ident">token_source</span>, <span class="ident">tree_sink</span>, <span class="ident">grammar</span>::<span class="ident">block</span>);
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_meta</span>(<span class="ident">token_source</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">TokenSource</span>, <span class="ident">tree_sink</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">TreeSink</span>) {
+    <span class="ident">parse_from_tokens</span>(<span class="ident">token_source</span>, <span class="ident">tree_sink</span>, <span class="ident">grammar</span>::<span class="ident">meta_item</span>);
+}
+
 <span class="doccomment">/// Parse given tokens into the given sink as an item</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_item</span>(<span class="ident">token_source</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">TokenSource</span>, <span class="ident">tree_sink</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">TreeSink</span>) {
     <span class="ident">parse_from_tokens</span>(<span class="ident">token_source</span>, <span class="ident">tree_sink</span>, <span class="ident">grammar</span>::<span class="ident">item</span>);
+}
+
+<span class="doccomment">/// Parse given tokens into the given sink as an visibility qualifier</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_vis</span>(<span class="ident">token_source</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">TokenSource</span>, <span class="ident">tree_sink</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">TreeSink</span>) {
+    <span class="ident">parse_from_tokens</span>(<span class="ident">token_source</span>, <span class="ident">tree_sink</span>, <span class="op">|</span><span class="ident">p</span><span class="op">|</span> {
+        <span class="ident">grammar</span>::<span class="ident">opt_visibility</span>(<span class="ident">p</span>);
+    });
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_macro_items</span>(<span class="ident">token_source</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">TokenSource</span>, <span class="ident">tree_sink</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">TreeSink</span>) {
