@@ -139,10 +139,17 @@
 <span id="139">139</span>
 <span id="140">140</span>
 <span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">Arc</span>;
 
-<span class="kw">use</span> <span class="ident">ra_syntax</span>::{<span class="ident">SyntaxNode</span>, <span class="ident">TreeArc</span>, <span class="ident">SourceFile</span>, <span class="ident">ast</span>};
+<span class="kw">use</span> <span class="ident">ra_syntax</span>::{<span class="ident">SyntaxNode</span>, <span class="ident">TreeArc</span>, <span class="ident">SourceFile</span>, <span class="ident">SmolStr</span>, <span class="ident">ast</span>};
 <span class="kw">use</span> <span class="ident">ra_db</span>::{<span class="ident">SourceDatabase</span>, <span class="ident">salsa</span>};
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
@@ -158,6 +165,7 @@
     <span class="ident">generics</span>::{<span class="ident">GenericParams</span>, <span class="ident">GenericDef</span>},
     <span class="ident">type_ref</span>::<span class="ident">TypeRef</span>,
     <span class="ident">traits</span>::<span class="ident">TraitData</span>, <span class="ident">Trait</span>, <span class="ident">ty</span>::<span class="ident">TraitRef</span>,
+    <span class="ident">lang_item</span>::{<span class="ident">LangItems</span>, <span class="ident">LangItemTarget</span>},
     <span class="ident">ids</span>
 };
 
@@ -242,6 +250,12 @@
 
     <span class="attribute">#[<span class="ident">salsa</span>::<span class="ident">invoke</span>(<span class="kw">crate</span>::<span class="ident">ConstSignature</span>::<span class="ident">static_signature_query</span>)]</span>
     <span class="kw">fn</span> <span class="ident">static_signature</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">konst</span>: <span class="ident">Static</span>) <span class="op">-&gt;</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">ConstSignature</span><span class="op">&gt;</span>;
+
+    <span class="attribute">#[<span class="ident">salsa</span>::<span class="ident">invoke</span>(<span class="kw">crate</span>::<span class="ident">lang_item</span>::<span class="ident">LangItems</span>::<span class="ident">lang_items_query</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">lang_items</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">krate</span>: <span class="ident">Crate</span>) <span class="op">-&gt;</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">LangItems</span><span class="op">&gt;</span>;
+
+    <span class="attribute">#[<span class="ident">salsa</span>::<span class="ident">invoke</span>(<span class="kw">crate</span>::<span class="ident">lang_item</span>::<span class="ident">LangItems</span>::<span class="ident">lang_item_query</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">lang_item</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">start_crate</span>: <span class="ident">Crate</span>, <span class="ident">item</span>: <span class="ident">SmolStr</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">LangItemTarget</span><span class="op">&gt;</span>;
 }
 
 <span class="attribute">#[<span class="ident">salsa</span>::<span class="ident">query_group</span>(<span class="ident">HirDatabaseStorage</span>)]</span>

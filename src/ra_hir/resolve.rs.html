@@ -303,6 +303,12 @@
 <span id="303">303</span>
 <span id="304">304</span>
 <span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Name resolution.</span>
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">Arc</span>;
@@ -311,13 +317,15 @@
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">ModuleDef</span>,
+    <span class="ident">code_model_api</span>::<span class="ident">Crate</span>,
     <span class="ident">db</span>::<span class="ident">HirDatabase</span>,
     <span class="ident">name</span>::{<span class="ident">Name</span>, <span class="ident">KnownName</span>},
     <span class="ident">nameres</span>::{<span class="ident">PerNs</span>, <span class="ident">CrateDefMap</span>, <span class="ident">CrateModuleId</span>},
     <span class="ident">generics</span>::<span class="ident">GenericParams</span>,
     <span class="ident">expr</span>::{<span class="ident">scope</span>::{<span class="ident">ExprScopes</span>, <span class="ident">ScopeId</span>}, <span class="ident">PatId</span>},
     <span class="ident">impl_block</span>::<span class="ident">ImplBlock</span>,
-    <span class="ident">path</span>::<span class="ident">Path</span>, <span class="ident">Trait</span>
+    <span class="ident">path</span>::<span class="ident">Path</span>,
+    <span class="ident">Trait</span>
 };
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Default</span>)]</span>
@@ -502,6 +510,10 @@
 
             <span class="kw">_</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
         })
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">krate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Crate</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">module</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">t</span><span class="op">|</span> <span class="ident">t</span>.<span class="number">0</span>.<span class="ident">krate</span>())
     }
 }
 

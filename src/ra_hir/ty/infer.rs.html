@@ -1416,6 +1416,8 @@
 <span id="1416">1416</span>
 <span id="1417">1417</span>
 <span id="1418">1418</span>
+<span id="1419">1419</span>
+<span id="1420">1420</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Type inference, i.e. the process of walking through the code and determining</span>
 <span class="doccomment">//! the type of each expression and pattern.</span>
@@ -1881,6 +1883,7 @@
         <span class="kw">let</span> <span class="ident">remaining_index</span> <span class="op">=</span> <span class="ident">remaining_index</span>.<span class="ident">unwrap_or</span>(<span class="ident">path</span>.<span class="ident">segments</span>.<span class="ident">len</span>());
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">actual_def_ty</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Ty</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
 
+        <span class="kw">let</span> <span class="ident">krate</span> <span class="op">=</span> <span class="ident">resolver</span>.<span class="ident">krate</span>()<span class="question-mark">?</span>;
         <span class="comment">// resolve intermediate segments</span>
         <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">segment</span>) <span class="kw">in</span> <span class="ident">path</span>.<span class="ident">segments</span>[<span class="ident">remaining_index</span>..].<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
             <span class="kw">let</span> <span class="ident">ty</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">resolved</span> {
@@ -1919,9 +1922,10 @@
             <span class="comment">// Attempt to find an impl_item for the type which has a name matching</span>
             <span class="comment">// the current segment</span>
             <span class="ident">log</span>::<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;looking for path segment: {:?}&quot;</span>, <span class="ident">segment</span>);
+
             <span class="ident">actual_def_ty</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">ty</span>.<span class="ident">clone</span>());
 
-            <span class="kw">let</span> <span class="ident">item</span>: <span class="kw">crate</span>::<span class="ident">ModuleDef</span> <span class="op">=</span> <span class="ident">ty</span>.<span class="ident">iterate_impl_items</span>(<span class="self">self</span>.<span class="ident">db</span>, <span class="op">|</span><span class="ident">item</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">item</span>: <span class="kw">crate</span>::<span class="ident">ModuleDef</span> <span class="op">=</span> <span class="ident">ty</span>.<span class="ident">iterate_impl_items</span>(<span class="self">self</span>.<span class="ident">db</span>, <span class="ident">krate</span>, <span class="op">|</span><span class="ident">item</span><span class="op">|</span> {
                 <span class="kw">let</span> <span class="ident">matching_def</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw">crate</span>::<span class="ident">ModuleDef</span><span class="op">&gt;</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">item</span> {
                     <span class="kw">crate</span>::<span class="ident">ImplItem</span>::<span class="ident">Method</span>(<span class="ident">func</span>) <span class="op">=&gt;</span> {
                         <span class="kw">let</span> <span class="ident">sig</span> <span class="op">=</span> <span class="ident">func</span>.<span class="ident">signature</span>(<span class="self">self</span>.<span class="ident">db</span>);

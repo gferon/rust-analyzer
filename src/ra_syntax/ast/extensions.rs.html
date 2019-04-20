@@ -325,6 +325,20 @@
 <span id="325">325</span>
 <span id="326">326</span>
 <span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Various extension methods to ast Nodes, which are hard to code-generate.</span>
 <span class="doccomment">//! Extensions for various expressions live in a sibling `expr_extensions` module.</span>
@@ -389,6 +403,20 @@
         <span class="kw">let</span> <span class="ident">attr</span> <span class="op">=</span> <span class="ident">tt</span>.<span class="ident">syntax</span>().<span class="ident">children_with_tokens</span>().<span class="ident">nth</span>(<span class="number">1</span>)<span class="question-mark">?</span>;
         <span class="kw">if</span> <span class="ident">attr</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">IDENT</span> {
             <span class="prelude-val">Some</span>(<span class="ident">attr</span>.<span class="ident">as_token</span>()<span class="question-mark">?</span>.<span class="ident">text</span>().<span class="ident">clone</span>())
+        } <span class="kw">else</span> {
+            <span class="prelude-val">None</span>
+        }
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_key_value</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">SmolStr</span>, <span class="ident">SmolStr</span>)<span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">tt</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">value</span>()<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">tt_node</span> <span class="op">=</span> <span class="ident">tt</span>.<span class="ident">syntax</span>();
+        <span class="kw">let</span> <span class="ident">attr</span> <span class="op">=</span> <span class="ident">tt_node</span>.<span class="ident">children_with_tokens</span>().<span class="ident">nth</span>(<span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="kw">if</span> <span class="ident">attr</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">IDENT</span> {
+            <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">attr</span>.<span class="ident">as_token</span>()<span class="question-mark">?</span>.<span class="ident">text</span>().<span class="ident">clone</span>();
+            <span class="kw">let</span> <span class="ident">val_node</span> <span class="op">=</span> <span class="ident">tt_node</span>.<span class="ident">children_with_tokens</span>().<span class="ident">find</span>(<span class="op">|</span><span class="ident">t</span><span class="op">|</span> <span class="ident">t</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">STRING</span>)<span class="question-mark">?</span>;
+            <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">val_node</span>.<span class="ident">as_token</span>()<span class="question-mark">?</span>.<span class="ident">text</span>().<span class="ident">trim_start_matches</span>(<span class="string">&quot;\&quot;&quot;</span>).<span class="ident">trim_end_matches</span>(<span class="string">&quot;\&quot;&quot;</span>);
+            <span class="prelude-val">Some</span>((<span class="ident">key</span>, <span class="ident">SmolStr</span>::<span class="ident">new</span>(<span class="ident">val</span>)))
         } <span class="kw">else</span> {
             <span class="prelude-val">None</span>
         }
