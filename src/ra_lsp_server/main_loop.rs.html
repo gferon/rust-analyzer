@@ -522,6 +522,7 @@
 <span id="522">522</span>
 <span id="523">523</span>
 <span id="524">524</span>
+<span id="525">525</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">mod</span> <span class="ident">handlers</span>;
 <span class="kw">mod</span> <span class="ident">subscriptions</span>;
@@ -822,6 +823,7 @@
         .<span class="ident">on</span>::<span class="op">&lt;</span><span class="ident">req</span>::<span class="ident">AnalyzerStatus</span><span class="op">&gt;</span>(<span class="ident">handlers</span>::<span class="ident">handle_analyzer_status</span>)<span class="question-mark">?</span>
         .<span class="ident">on</span>::<span class="op">&lt;</span><span class="ident">req</span>::<span class="ident">SyntaxTree</span><span class="op">&gt;</span>(<span class="ident">handlers</span>::<span class="ident">handle_syntax_tree</span>)<span class="question-mark">?</span>
         .<span class="ident">on</span>::<span class="op">&lt;</span><span class="ident">req</span>::<span class="ident">ExtendSelection</span><span class="op">&gt;</span>(<span class="ident">handlers</span>::<span class="ident">handle_extend_selection</span>)<span class="question-mark">?</span>
+        .<span class="ident">on</span>::<span class="op">&lt;</span><span class="ident">req</span>::<span class="ident">SelectionRangeRequest</span><span class="op">&gt;</span>(<span class="ident">handlers</span>::<span class="ident">handle_selection_range</span>)<span class="question-mark">?</span>
         .<span class="ident">on</span>::<span class="op">&lt;</span><span class="ident">req</span>::<span class="ident">FindMatchingBrace</span><span class="op">&gt;</span>(<span class="ident">handlers</span>::<span class="ident">handle_find_matching_brace</span>)<span class="question-mark">?</span>
         .<span class="ident">on</span>::<span class="op">&lt;</span><span class="ident">req</span>::<span class="ident">JoinLines</span><span class="op">&gt;</span>(<span class="ident">handlers</span>::<span class="ident">handle_join_lines</span>)<span class="question-mark">?</span>
         .<span class="ident">on</span>::<span class="op">&lt;</span><span class="ident">req</span>::<span class="ident">OnEnter</span><span class="op">&gt;</span>(<span class="ident">handlers</span>::<span class="ident">handle_on_enter</span>)<span class="question-mark">?</span>
