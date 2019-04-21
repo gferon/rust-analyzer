@@ -110,12 +110,15 @@
 <span id="110">110</span>
 <span id="111">111</span>
 <span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Stuff that will probably mostly replaced by Chalk.</span>
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">HashMap</span>;
 
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">db</span>::<span class="ident">HirDatabase</span>;
-<span class="kw">use</span> <span class="kw">super</span>::{ <span class="ident">TraitRef</span>, <span class="ident">Substs</span>, <span class="ident">infer</span>::{ <span class="ident">TypeVarId</span>, <span class="ident">InferTy</span>}, <span class="ident">Ty</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">db</span>::<span class="ident">HirDatabase</span>, <span class="ident">generics</span>::<span class="ident">HasGenericParams</span>};
+<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">TraitRef</span>, <span class="ident">Substs</span>, <span class="ident">infer</span>::{<span class="ident">TypeVarId</span>, <span class="ident">InferTy</span>}, <span class="ident">Ty</span>};
 
 <span class="comment">// Copied (and simplified) from Chalk</span>
 
@@ -172,7 +175,10 @@
         <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">None</span>,
     };
     <span class="kw">let</span> <span class="ident">crate_impl_blocks</span> <span class="op">=</span> <span class="ident">db</span>.<span class="ident">impls_in_crate</span>(<span class="ident">krate</span>);
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">impl_blocks</span> <span class="op">=</span> <span class="ident">crate_impl_blocks</span>.<span class="ident">lookup_impl_blocks_for_trait</span>(<span class="kw-2">&amp;</span><span class="ident">trait_ref</span>.<span class="ident">trait_</span>);
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">impl_blocks</span> <span class="op">=</span> <span class="ident">crate_impl_blocks</span>
+        .<span class="ident">lookup_impl_blocks_for_trait</span>(<span class="kw-2">&amp;</span><span class="ident">trait_ref</span>.<span class="ident">trait_</span>)
+        <span class="comment">// we don&#39;t handle where clauses at all, waiting for Chalk for that</span>
+        .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">impl_block</span><span class="op">|</span> <span class="ident">impl_block</span>.<span class="ident">generic_params</span>(<span class="ident">db</span>).<span class="ident">where_predicates</span>.<span class="ident">is_empty</span>());
     <span class="ident">impl_blocks</span>
         .<span class="ident">find_map</span>(<span class="op">|</span><span class="ident">impl_block</span><span class="op">|</span> <span class="ident">unify_trait_refs</span>(<span class="kw-2">&amp;</span><span class="ident">trait_ref</span>, <span class="kw-2">&amp;</span><span class="ident">impl_block</span>.<span class="ident">target_trait_ref</span>(<span class="ident">db</span>)<span class="question-mark">?</span>))
 }
