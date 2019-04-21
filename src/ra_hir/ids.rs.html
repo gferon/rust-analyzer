@@ -299,6 +299,26 @@
 <span id="299">299</span>
 <span id="300">300</span>
 <span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">hash</span>::{<span class="ident">Hash</span>, <span class="ident">Hasher</span>},
@@ -365,8 +385,15 @@
         <span class="kw">match</span> <span class="ident">file_id</span>.<span class="number">0</span> {
             <span class="ident">HirFileIdRepr</span>::<span class="ident">File</span>(<span class="ident">file_id</span>) <span class="op">=&gt;</span> <span class="ident">db</span>.<span class="ident">parse</span>(<span class="ident">file_id</span>),
             <span class="ident">HirFileIdRepr</span>::<span class="ident">Macro</span>(<span class="ident">macro_call_id</span>) <span class="op">=&gt;</span> {
-                <span class="comment">// returning an empty string looks fishy...</span>
-                <span class="ident">parse_macro</span>(<span class="ident">db</span>, <span class="ident">macro_call_id</span>).<span class="ident">unwrap_or_else</span>(<span class="op">||</span> <span class="ident">SourceFile</span>::<span class="ident">parse</span>(<span class="string">&quot;&quot;</span>))
+                <span class="ident">parse_macro</span>(<span class="ident">db</span>, <span class="ident">macro_call_id</span>).<span class="ident">unwrap_or_else</span>(<span class="op">||</span> {
+                    <span class="comment">// Note:</span>
+                    <span class="comment">// The final goal we would like to make all parse_macro success,</span>
+                    <span class="comment">// such that the following log will not call anyway.</span>
+                    <span class="ident">log</span>::<span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;fail on macro_parse: {}&quot;</span>, <span class="ident">macro_call_id</span>.<span class="ident">debug_dump</span>(<span class="ident">db</span>));
+
+                    <span class="comment">// returning an empty string looks fishy...</span>
+                    <span class="ident">SourceFile</span>::<span class="ident">parse</span>(<span class="string">&quot;&quot;</span>)
+                })
             }
         }
     }
@@ -599,6 +626,19 @@
     }
     <span class="kw">fn</span> <span class="ident">lookup_intern</span>(<span class="self">self</span>, <span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">DefDatabase</span>) <span class="op">-&gt;</span> <span class="ident">ItemLoc</span><span class="op">&lt;</span><span class="ident">ast</span>::<span class="ident">TypeAliasDef</span><span class="op">&gt;</span> {
         <span class="ident">db</span>.<span class="ident">lookup_intern_type_alias</span>(<span class="self">self</span>)
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">MacroCallId</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">debug_dump</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">DefDatabase</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
+        <span class="kw">let</span> <span class="ident">loc</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">clone</span>().<span class="ident">loc</span>(<span class="ident">db</span>);
+        <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">loc</span>.<span class="ident">ast_id</span>.<span class="ident">to_node</span>(<span class="ident">db</span>);
+        <span class="kw">let</span> <span class="ident">syntax_str</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">syntax</span>().<span class="ident">to_string</span>();
+
+        <span class="comment">// dump the file name</span>
+        <span class="kw">let</span> <span class="ident">file_id</span>: <span class="ident">HirFileId</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">clone</span>().<span class="ident">into</span>();
+        <span class="kw">let</span> <span class="ident">original</span> <span class="op">=</span> <span class="ident">file_id</span>.<span class="ident">original_file</span>(<span class="ident">db</span>);
+        <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;macro call [file: {:#?}] : {}&quot;</span>, <span class="ident">db</span>.<span class="ident">file_relative_path</span>(<span class="ident">original</span>), <span class="ident">syntax_str</span>)
     }
 }
 </pre></div>

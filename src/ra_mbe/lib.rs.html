@@ -823,6 +823,70 @@
 <span id="823">823</span>
 <span id="824">824</span>
 <span id="825">825</span>
+<span id="826">826</span>
+<span id="827">827</span>
+<span id="828">828</span>
+<span id="829">829</span>
+<span id="830">830</span>
+<span id="831">831</span>
+<span id="832">832</span>
+<span id="833">833</span>
+<span id="834">834</span>
+<span id="835">835</span>
+<span id="836">836</span>
+<span id="837">837</span>
+<span id="838">838</span>
+<span id="839">839</span>
+<span id="840">840</span>
+<span id="841">841</span>
+<span id="842">842</span>
+<span id="843">843</span>
+<span id="844">844</span>
+<span id="845">845</span>
+<span id="846">846</span>
+<span id="847">847</span>
+<span id="848">848</span>
+<span id="849">849</span>
+<span id="850">850</span>
+<span id="851">851</span>
+<span id="852">852</span>
+<span id="853">853</span>
+<span id="854">854</span>
+<span id="855">855</span>
+<span id="856">856</span>
+<span id="857">857</span>
+<span id="858">858</span>
+<span id="859">859</span>
+<span id="860">860</span>
+<span id="861">861</span>
+<span id="862">862</span>
+<span id="863">863</span>
+<span id="864">864</span>
+<span id="865">865</span>
+<span id="866">866</span>
+<span id="867">867</span>
+<span id="868">868</span>
+<span id="869">869</span>
+<span id="870">870</span>
+<span id="871">871</span>
+<span id="872">872</span>
+<span id="873">873</span>
+<span id="874">874</span>
+<span id="875">875</span>
+<span id="876">876</span>
+<span id="877">877</span>
+<span id="878">878</span>
+<span id="879">879</span>
+<span id="880">880</span>
+<span id="881">881</span>
+<span id="882">882</span>
+<span id="883">883</span>
+<span id="884">884</span>
+<span id="885">885</span>
+<span id="886">886</span>
+<span id="887">887</span>
+<span id="888">888</span>
+<span id="889">889</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">/// `mbe` (short for Macro By Example) crate contains code for handling</span>
 <span class="doccomment">/// `macro_rules` macros. It uses `TokenTree` (from `ra_tt` package) as the</span>
@@ -1040,14 +1104,15 @@ impl_froms!(TokenTree: Leaf, Subtree);
         <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="ident">token_tree_to_macro_items</span>(<span class="kw-2">&amp;</span><span class="ident">expanded</span>);
 
         <span class="comment">// Eat all white space by parse it back and forth</span>
-        <span class="kw">let</span> <span class="ident">expansion</span> <span class="op">=</span> <span class="ident">ast</span>::<span class="ident">SourceFile</span>::<span class="ident">parse</span>(<span class="ident">expansion</span>);
+        <span class="comment">// Because $crate will seperate in two token , will do some special treatment here</span>
+        <span class="kw">let</span> <span class="ident">expansion</span> <span class="op">=</span> <span class="ident">expansion</span>.<span class="ident">replace</span>(<span class="string">&quot;$crate&quot;</span>, <span class="string">&quot;C_C__C&quot;</span>);
+        <span class="kw">let</span> <span class="ident">expansion</span> <span class="op">=</span> <span class="ident">ast</span>::<span class="ident">SourceFile</span>::<span class="ident">parse</span>(<span class="kw-2">&amp;</span><span class="ident">expansion</span>);
         <span class="kw">let</span> <span class="ident">expansion</span> <span class="op">=</span> <span class="ident">syntax_node_to_token_tree</span>(<span class="ident">expansion</span>.<span class="ident">syntax</span>()).<span class="ident">unwrap</span>().<span class="number">0</span>;
         <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="ident">token_tree_to_macro_items</span>(<span class="kw-2">&amp;</span><span class="ident">expansion</span>);
+        <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="ident">file</span>.<span class="ident">unwrap</span>().<span class="ident">syntax</span>().<span class="ident">debug_dump</span>().<span class="ident">trim</span>().<span class="ident">to_string</span>();
+        <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="ident">file</span>.<span class="ident">replace</span>(<span class="string">&quot;C_C__C&quot;</span>, <span class="string">&quot;$crate&quot;</span>);
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(
-            <span class="ident">tree</span>.<span class="ident">unwrap</span>().<span class="ident">syntax</span>().<span class="ident">debug_dump</span>().<span class="ident">trim</span>(),
-            <span class="ident">file</span>.<span class="ident">unwrap</span>().<span class="ident">syntax</span>().<span class="ident">debug_dump</span>().<span class="ident">trim</span>()
-        );
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">tree</span>.<span class="ident">unwrap</span>().<span class="ident">syntax</span>().<span class="ident">debug_dump</span>().<span class="ident">trim</span>(), <span class="ident">file</span>,);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -1174,7 +1239,36 @@ impl_froms!(TokenTree: Leaf, Subtree);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">expand_to_item_list</span>() {
+    <span class="kw">fn</span> <span class="ident">test_match_group_empty_fixed_token</span>() {
+        <span class="kw">let</span> <span class="ident">rules</span> <span class="op">=</span> <span class="ident">create_rules</span>(
+            <span class="string">r#&quot;
+        macro_rules! foo {
+            ($ ($ i:ident)* #abc) =&gt; ( fn baz { $ (
+                $ i ();
+            )*} );            
+        }
+&quot;#</span>,
+        );
+
+        <span class="ident">assert_expansion</span>(<span class="kw-2">&amp;</span><span class="ident">rules</span>, <span class="string">&quot;foo! {#abc}&quot;</span>, <span class="string">&quot;fn baz {}&quot;</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_match_group_in_subtree</span>() {
+        <span class="kw">let</span> <span class="ident">rules</span> <span class="op">=</span> <span class="ident">create_rules</span>(
+            <span class="string">r#&quot;
+        macro_rules! foo {            
+            (fn $name:ident {$($i:ident)*} ) =&gt; ( fn $name() { $ (
+                $ i ();
+            )*} );            
+        }&quot;#</span>,
+        );
+
+        <span class="ident">assert_expansion</span>(<span class="kw-2">&amp;</span><span class="ident">rules</span>, <span class="string">&quot;foo! {fn baz {a b} }&quot;</span>, <span class="string">&quot;fn baz () {a () ; b () ;}&quot;</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_expand_to_item_list</span>() {
         <span class="kw">let</span> <span class="ident">rules</span> <span class="op">=</span> <span class="ident">create_rules</span>(
             <span class="string">&quot;
             macro_rules! structs {
@@ -1227,7 +1321,7 @@ MACRO_ITEMS@[0; 40)
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">expand_literals_to_token_tree</span>() {
+    <span class="kw">fn</span> <span class="ident">test_expand_literals_to_token_tree</span>() {
         <span class="kw">fn</span> <span class="ident">to_subtree</span>(<span class="ident">tt</span>: <span class="kw-2">&amp;</span><span class="ident">tt</span>::<span class="ident">TokenTree</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">tt</span>::<span class="ident">Subtree</span> {
             <span class="kw">if</span> <span class="kw">let</span> <span class="ident">tt</span>::<span class="ident">TokenTree</span>::<span class="ident">Subtree</span>(<span class="ident">subtree</span>) <span class="op">=</span> <span class="ident">tt</span> {
                 <span class="kw">return</span> <span class="kw-2">&amp;</span><span class="ident">subtree</span>;
@@ -1589,30 +1683,29 @@ MACRO_ITEMS@[0; 40)
         );
     }
 
-    <span class="comment">//     #[test]</span>
-    <span class="comment">//     fn test_tt_block() {</span>
-    <span class="comment">//         let rules = create_rules(</span>
-    <span class="comment">//             r#&quot;</span>
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="comment">// fn test_tt_block() {</span>
+    <span class="comment">//     let rules = create_rules(</span>
+    <span class="comment">//         r#&quot;</span>
     <span class="comment">//         macro_rules! foo {</span>
     <span class="comment">//             ($ i:tt) =&gt; { fn foo() $ i }</span>
     <span class="comment">//         }</span>
     <span class="comment">// &quot;#,</span>
-    <span class="comment">//         );</span>
-    <span class="comment">//         assert_expansion(&amp;rules, r#&quot;foo! { { 1; } }&quot;#, r#&quot;fn foo () {1 ;}&quot;#);</span>
-    <span class="comment">//     }</span>
+    <span class="comment">//     );</span>
+    <span class="comment">//     assert_expansion(&amp;rules, r#&quot;foo! { { 1; } }&quot;#, r#&quot;fn foo () {1 ;}&quot;#);</span>
+    <span class="comment">// }</span>
 
-    <span class="comment">//     #[test]</span>
-    <span class="comment">//     fn test_tt_group() {</span>
-    <span class="comment">//         let rules = create_rules(</span>
-    <span class="comment">//             r#&quot;</span>
+    <span class="comment">// #[test]</span>
+    <span class="comment">// fn test_tt_group() {</span>
+    <span class="comment">//     let rules = create_rules(</span>
+    <span class="comment">//         r#&quot;</span>
     <span class="comment">//         macro_rules! foo {</span>
     <span class="comment">//              ($($ i:tt)*) =&gt; { $($ i)* }</span>
     <span class="comment">//         }</span>
     <span class="comment">// &quot;#,</span>
-    <span class="comment">//         );</span>
-    <span class="comment">//         assert_expansion(&amp;rules, r#&quot;foo! { fn foo() {} }&quot;#, r#&quot;fn foo () {}&quot;#);</span>
-    <span class="comment">//     }</span>
-
+    <span class="comment">//     );</span>
+    <span class="comment">//     assert_expansion(&amp;rules, r#&quot;foo! { fn foo() {} }&quot;#, r#&quot;fn foo () {}&quot;#);</span>
+    <span class="comment">// }</span>
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_lifetime</span>() {
         <span class="kw">let</span> <span class="ident">rules</span> <span class="op">=</span> <span class="ident">create_rules</span>(
@@ -1647,6 +1740,41 @@ MACRO_ITEMS@[0; 40)
 &quot;#</span>,
         );
         <span class="ident">assert_expansion</span>(<span class="kw-2">&amp;</span><span class="ident">rules</span>, <span class="string">r#&quot;foo!(pub foo);&quot;#</span>, <span class="string">r#&quot;pub fn foo () {}&quot;#</span>);
+    }
+
+    <span class="comment">// The following tests are based on real world situations</span>
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_winapi_struct</span>() {
+        <span class="comment">// from https://github.com/retep998/winapi-rs/blob/a7ef2bca086aae76cf6c4ce4c2552988ed9798ad/src/macros.rs#L366</span>
+
+        <span class="kw">let</span> <span class="ident">rules</span> <span class="op">=</span> <span class="ident">create_rules</span>(
+            <span class="string">r#&quot;
+macro_rules! STRUCT {
+    ($(#[$attrs:meta])* struct $name:ident {
+        $($field:ident: $ftype:ty,)+
+    }) =&gt; (
+        #[repr(C)] #[derive(Copy)] $(#[$attrs])*
+        pub struct $name {
+            $(pub $field: $ftype,)+
+        }
+        impl Clone for $name {
+            #[inline]
+            fn clone(&amp;self) -&gt; $name { *self }
+        }
+        #[cfg(feature = &quot;impl-default&quot;)]
+        impl Default for $name {
+            #[inline]
+            fn default() -&gt; $name { unsafe { $crate::_core::mem::zeroed() } }
+        }
+    );
+}
+&quot;#</span>,
+        );
+        <span class="comment">// from https://github.com/retep998/winapi-rs/blob/a7ef2bca086aae76cf6c4ce4c2552988ed9798ad/src/shared/d3d9caps.rs</span>
+        <span class="ident">assert_expansion</span>(<span class="kw-2">&amp;</span><span class="ident">rules</span>, <span class="string">r#&quot;STRUCT!{struct D3DVSHADERCAPS2_0 {Caps: u8,}}&quot;#</span>,
+        <span class="string">&quot;# [repr (C)] # [derive (Copy)]  pub struct D3DVSHADERCAPS2_0 {pub Caps : u8 ,} impl Clone for D3DVSHADERCAPS2_0 {# [inline] fn clone (&amp; self) -&gt; D3DVSHADERCAPS2_0 {* self}} # [cfg (feature = \&quot;impl-default\&quot;)] impl Default for D3DVSHADERCAPS2_0 {# [inline] fn default () -&gt; D3DVSHADERCAPS2_0 {unsafe {$crate :: _core :: mem :: zeroed ()}}}&quot;</span>);
+        <span class="ident">assert_expansion</span>(<span class="kw-2">&amp;</span><span class="ident">rules</span>, <span class="string">r#&quot;STRUCT!{#[cfg_attr(target_arch = &quot;x86&quot;, repr(packed))] struct D3DCONTENTPROTECTIONCAPS {Caps : u8 ,}}&quot;#</span>, 
+        <span class="string">&quot;# [repr (C)] # [derive (Copy)] # [cfg_attr (target_arch = \&quot;x86\&quot; , repr (packed))] pub struct D3DCONTENTPROTECTIONCAPS {pub Caps : u8 ,} impl Clone for D3DCONTENTPROTECTIONCAPS {# [inline] fn clone (&amp; self) -&gt; D3DCONTENTPROTECTIONCAPS {* self}} # [cfg (feature = \&quot;impl-default\&quot;)] impl Default for D3DCONTENTPROTECTIONCAPS {# [inline] fn default () -&gt; D3DCONTENTPROTECTIONCAPS {unsafe {$crate :: _core :: mem :: zeroed ()}}}&quot;</span>);
     }
 }
 </pre></div>
