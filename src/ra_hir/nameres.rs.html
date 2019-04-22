@@ -478,6 +478,20 @@
 <span id="478">478</span>
 <span id="479">479</span>
 <span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">/// This module implements import-resolution/macro expansion algorithm.</span>
 <span class="doccomment">///</span>
@@ -536,7 +550,7 @@
 
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">Arc</span>;
 
-<span class="kw">use</span> <span class="ident">rustc_hash</span>::<span class="ident">FxHashMap</span>;
+<span class="kw">use</span> <span class="ident">rustc_hash</span>::{<span class="ident">FxHashMap</span>, <span class="ident">FxHashSet</span>};
 <span class="kw">use</span> <span class="ident">ra_arena</span>::{<span class="ident">Arena</span>, <span class="ident">RawId</span>, <span class="ident">impl_arena_id</span>};
 <span class="kw">use</span> <span class="ident">ra_db</span>::{<span class="ident">FileId</span>, <span class="ident">Edition</span>};
 <span class="kw">use</span> <span class="ident">test_utils</span>::<span class="ident">tested_by</span>;
@@ -572,6 +586,19 @@
     <span class="ident">root</span>: <span class="ident">CrateModuleId</span>,
     <span class="ident">modules</span>: <span class="ident">Arena</span><span class="op">&lt;</span><span class="ident">CrateModuleId</span>, <span class="ident">ModuleData</span><span class="op">&gt;</span>,
     <span class="ident">public_macros</span>: <span class="ident">FxHashMap</span><span class="op">&lt;</span><span class="ident">Name</span>, <span class="ident">MacroDefId</span><span class="op">&gt;</span>,
+
+    <span class="doccomment">/// Some macros are not well-behavior, which leads to infinite loop</span>
+    <span class="doccomment">/// e.g. macro_rules! foo { ($ty:ty) =&gt; { foo!($ty); } }</span>
+    <span class="doccomment">/// We mark it down and skip it in collector</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// FIXME:</span>
+    <span class="doccomment">/// Right now it only handle a poison macro in a single crate,</span>
+    <span class="doccomment">/// such that if other crate try to call that macro,</span>
+    <span class="doccomment">/// the whole process will do again until it became poisoned in that crate.</span>
+    <span class="doccomment">/// We should handle this macro set globally</span>
+    <span class="doccomment">/// However, do we want to put it as a global variable?</span>
+    <span class="ident">poison_macros</span>: <span class="ident">FxHashSet</span><span class="op">&lt;</span><span class="ident">MacroDefId</span><span class="op">&gt;</span>,
+
     <span class="ident">diagnostics</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">DefDiagnostic</span><span class="op">&gt;</span>,
 }
 
@@ -676,6 +703,7 @@
                 <span class="ident">root</span>,
                 <span class="ident">modules</span>,
                 <span class="ident">public_macros</span>: <span class="ident">FxHashMap</span>::<span class="ident">default</span>(),
+                <span class="ident">poison_macros</span>: <span class="ident">FxHashSet</span>::<span class="ident">default</span>(),
                 <span class="ident">diagnostics</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
             }
         };

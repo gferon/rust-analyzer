@@ -149,6 +149,22 @@
 <span id="149">149</span>
 <span id="150">150</span>
 <span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">/// `tt` crate defines a `TokenTree` data structure: this is the interface (both</span>
 <span class="doccomment">/// input and output) of macros. It closely mirrors `proc_macro` crate&#39;s</span>
@@ -299,6 +315,22 @@
 <span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Punct</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
         <span class="ident">fmt</span>::<span class="ident">Display</span>::<span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">char</span>, <span class="ident">f</span>)
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Subtree</span> {
+    <span class="doccomment">/// Count the number of tokens recursively</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">count</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+        <span class="kw">let</span> <span class="ident">children_count</span> <span class="op">=</span> <span class="self">self</span>
+            .<span class="ident">token_trees</span>
+            .<span class="ident">iter</span>()
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">c</span> {
+                <span class="ident">TokenTree</span>::<span class="ident">Subtree</span>(<span class="ident">c</span>) <span class="op">=&gt;</span> <span class="ident">c</span>.<span class="ident">count</span>(),
+                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="number">0</span>,
+            })
+            .<span class="ident">sum</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>();
+
+        <span class="self">self</span>.<span class="ident">token_trees</span>.<span class="ident">len</span>() <span class="op">+</span> <span class="ident">children_count</span>
     }
 }
 </pre></div>
