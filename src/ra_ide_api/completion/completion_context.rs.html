@@ -229,6 +229,8 @@
 <span id="229">229</span>
 <span id="230">230</span>
 <span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">ra_text_edit</span>::<span class="ident">AtomTextEdit</span>;
 <span class="kw">use</span> <span class="ident">ra_syntax</span>::{
@@ -259,7 +261,7 @@
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">is_pat_binding</span>: <span class="ident">bool</span>,
     <span class="doccomment">/// A single-indent path, like `foo`. `::foo` should not be considered a trivial path.</span>
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">is_trivial_path</span>: <span class="ident">bool</span>,
-    <span class="doccomment">/// If not a trivial, path, the prefix (qualifier).</span>
+    <span class="doccomment">/// If not a trivial path, the prefix (qualifier).</span>
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">path_prefix</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">hir</span>::<span class="ident">Path</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">after_if</span>: <span class="ident">bool</span>,
     <span class="doccomment">/// `true` if we are a statement or a last expr in the block.</span>
@@ -383,6 +385,7 @@
             <span class="prelude-val">Some</span>(<span class="ident">it</span>) <span class="op">=&gt;</span> <span class="ident">it</span>,
             <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span>,
         };
+
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">segment</span>) <span class="op">=</span> <span class="ident">ast</span>::<span class="ident">PathSegment</span>::<span class="ident">cast</span>(<span class="ident">parent</span>) {
             <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">segment</span>.<span class="ident">parent_path</span>();
             <span class="self">self</span>.<span class="ident">is_call</span> <span class="op">=</span> <span class="ident">path</span>
@@ -399,6 +402,7 @@
                     <span class="kw">return</span>;
                 }
             }
+
             <span class="kw">if</span> <span class="ident">path</span>.<span class="ident">qualifier</span>().<span class="ident">is_none</span>() {
                 <span class="self">self</span>.<span class="ident">is_trivial_path</span> <span class="op">=</span> <span class="bool-val">true</span>;
 
