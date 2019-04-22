@@ -326,6 +326,7 @@
 <span id="326">326</span>
 <span id="327">327</span>
 <span id="328">328</span>
+<span id="329">329</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! `ra_assits` crate provides a bunch of code assists, also known as code</span>
 <span class="doccomment">//! actions (in LSP) or intentions (in IntelliJ).</span>
@@ -336,6 +337,7 @@
 
 <span class="kw">mod</span> <span class="ident">assist_ctx</span>;
 <span class="kw">mod</span> <span class="ident">marks</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">ast_editor</span>;
 
 <span class="kw">use</span> <span class="ident">itertools</span>::<span class="ident">Itertools</span>;
 
@@ -365,7 +367,7 @@
     <span class="kw">pub</span> <span class="ident">target</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextRange</span><span class="op">&gt;</span>,
 }
 
-<span class="doccomment">/// Return all the assists applicable at the given position.</span>
+<span class="doccomment">/// Return all the assists eapplicable at the given position.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// Assists are returned in the &quot;unresolved&quot; state, that is only labels are</span>
 <span class="doccomment">/// returned, without actual edits.</span>

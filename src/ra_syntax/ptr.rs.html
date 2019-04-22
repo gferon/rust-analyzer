@@ -94,7 +94,7 @@
 <span class="doccomment">/// specific node across reparses of the same file.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SyntaxNodePtr</span> {
-    <span class="ident">range</span>: <span class="ident">TextRange</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">range</span>: <span class="ident">TextRange</span>,
     <span class="ident">kind</span>: <span class="ident">SyntaxKind</span>,
 }
 
