@@ -54,7 +54,7 @@
     <span class="ident">CodeActionProviderCapability</span>, <span class="ident">CodeLensOptions</span>, <span class="ident">CompletionOptions</span>, <span class="ident">DocumentOnTypeFormattingOptions</span>,
     <span class="ident">ExecuteCommandOptions</span>, <span class="ident">FoldingRangeProviderCapability</span>, <span class="ident">RenameOptions</span>, <span class="ident">RenameProviderCapability</span>,
     <span class="ident">ServerCapabilities</span>, <span class="ident">SignatureHelpOptions</span>, <span class="ident">TextDocumentSyncCapability</span>, <span class="ident">TextDocumentSyncKind</span>,
-    <span class="ident">TextDocumentSyncOptions</span>, <span class="ident">ImplementationProviderCapability</span>, <span class="ident">GenericCapability</span>,
+    <span class="ident">TextDocumentSyncOptions</span>, <span class="ident">ImplementationProviderCapability</span>, <span class="ident">GenericCapability</span>, <span class="ident">TypeDefinitionProviderCapability</span>
 };
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">server_capabilities</span>() <span class="op">-&gt;</span> <span class="ident">ServerCapabilities</span> {
@@ -75,7 +75,7 @@
             <span class="ident">trigger_characters</span>: <span class="prelude-val">Some</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;(&quot;</span>.<span class="ident">to_string</span>(), <span class="string">&quot;,&quot;</span>.<span class="ident">to_string</span>(), <span class="string">&quot;)&quot;</span>.<span class="ident">to_string</span>()]),
         }),
         <span class="ident">definition_provider</span>: <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
-        <span class="ident">type_definition_provider</span>: <span class="prelude-val">None</span>,
+        <span class="ident">type_definition_provider</span>: <span class="prelude-val">Some</span>(<span class="ident">TypeDefinitionProviderCapability</span>::<span class="ident">Simple</span>(<span class="bool-val">true</span>)),
         <span class="ident">implementation_provider</span>: <span class="prelude-val">Some</span>(<span class="ident">ImplementationProviderCapability</span>::<span class="ident">Simple</span>(<span class="bool-val">true</span>)),
         <span class="ident">references_provider</span>: <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
         <span class="ident">document_highlight_provider</span>: <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
