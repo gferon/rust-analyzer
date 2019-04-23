@@ -305,6 +305,7 @@
 <span id="305">305</span>
 <span id="306">306</span>
 <span id="307">307</span>
+<span id="308">308</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
 
@@ -474,6 +475,7 @@
 <span class="comment">// type A = fn();</span>
 <span class="comment">// type B = unsafe fn();</span>
 <span class="comment">// type C = unsafe extern &quot;C&quot; fn();</span>
+<span class="comment">// type D = extern &quot;C&quot; fn ( u8 , ... ) -&gt; u8;</span>
 <span class="kw">fn</span> <span class="ident">fn_pointer_type</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Parser</span>) {
     <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">start</span>();
     <span class="ident">p</span>.<span class="ident">eat</span>(<span class="ident">UNSAFE_KW</span>);
