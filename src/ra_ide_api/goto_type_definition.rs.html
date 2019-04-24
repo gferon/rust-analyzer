@@ -64,6 +64,21 @@
 <span id="64">64</span>
 <span id="65">65</span>
 <span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
+<span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">ra_db</span>::<span class="ident">SourceDatabase</span>;
 <span class="kw">use</span> <span class="ident">ra_syntax</span>::{
@@ -97,9 +112,9 @@
         <span class="kw">return</span> <span class="prelude-val">None</span>;
     };
 
-    <span class="kw">let</span> (<span class="ident">adt_def</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">ty</span>.<span class="ident">as_adt</span>()<span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="ident">nav</span> <span class="op">=</span> <span class="ident">NavigationTarget</span>::<span class="ident">from_adt_def</span>(<span class="ident">db</span>, <span class="ident">adt_def</span>);
+    <span class="kw">let</span> <span class="ident">adt_def</span> <span class="op">=</span> <span class="ident">ty</span>.<span class="ident">autoderef</span>(<span class="ident">db</span>).<span class="ident">find_map</span>(<span class="op">|</span><span class="ident">ty</span><span class="op">|</span> <span class="ident">ty</span>.<span class="ident">as_adt</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">adt</span><span class="op">|</span> <span class="ident">adt</span>.<span class="number">0</span>))<span class="question-mark">?</span>;
 
+    <span class="kw">let</span> <span class="ident">nav</span> <span class="op">=</span> <span class="ident">NavigationTarget</span>::<span class="ident">from_adt_def</span>(<span class="ident">db</span>, <span class="ident">adt_def</span>);
     <span class="prelude-val">Some</span>(<span class="ident">RangeInfo</span>::<span class="ident">new</span>(<span class="ident">node</span>.<span class="ident">range</span>(), <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">nav</span>]))
 }
 
@@ -124,6 +139,21 @@
             struct Foo;
             fn foo() {
                 let f: Foo;
+                f&lt;|&gt;
+            }
+            &quot;</span>,
+            <span class="string">&quot;Foo STRUCT_DEF FileId(1) [0; 11) [7; 10)&quot;</span>,
+        );
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">goto_type_definition_works_simple_ref</span>() {
+        <span class="ident">check_goto</span>(
+            <span class="string">&quot;
+            //- /lib.rs
+            struct Foo;
+            fn foo() {
+                let f: &amp;Foo;
                 f&lt;|&gt;
             }
             &quot;</span>,
