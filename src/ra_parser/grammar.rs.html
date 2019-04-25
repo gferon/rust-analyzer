@@ -283,6 +283,21 @@
 <span id="283">283</span>
 <span id="284">284</span>
 <span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! This is the actual &quot;grammar&quot; of the Rust language.</span>
 <span class="doccomment">//!</span>
@@ -405,7 +420,22 @@
             <span class="ident">items</span>::<span class="ident">token_tree</span>(<span class="ident">p</span>);
             <span class="kw">break</span>;
         } <span class="kw">else</span> {
-            <span class="ident">p</span>.<span class="ident">bump</span>();
+            <span class="comment">// https://doc.rust-lang.org/reference/attributes.html</span>
+            <span class="comment">// https://doc.rust-lang.org/reference/paths.html#simple-paths</span>
+            <span class="comment">// The start of an meta must be a simple path</span>
+            <span class="kw">match</span> <span class="ident">p</span>.<span class="ident">current</span>() {
+                <span class="ident">IDENT</span> <span class="op">|</span> <span class="ident">COLONCOLON</span> <span class="op">|</span> <span class="ident">SUPER_KW</span> <span class="op">|</span> <span class="ident">SELF_KW</span> <span class="op">|</span> <span class="ident">CRATE_KW</span> <span class="op">=&gt;</span> <span class="ident">p</span>.<span class="ident">bump</span>(),
+                <span class="ident">EQ</span> <span class="op">=&gt;</span> {
+                    <span class="ident">p</span>.<span class="ident">bump</span>();
+                    <span class="kw">match</span> <span class="ident">p</span>.<span class="ident">current</span>() {
+                        <span class="ident">c</span> <span class="kw">if</span> <span class="ident">c</span>.<span class="ident">is_literal</span>() <span class="op">=&gt;</span> <span class="ident">p</span>.<span class="ident">bump</span>(),
+                        <span class="ident">TRUE_KW</span> <span class="op">|</span> <span class="ident">FALSE_KW</span> <span class="op">=&gt;</span> <span class="ident">p</span>.<span class="ident">bump</span>(),
+                        <span class="kw">_</span> <span class="op">=&gt;</span> {}
+                    }
+                    <span class="kw">break</span>;
+                }
+                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">break</span>,
+            }
         }
     }
 

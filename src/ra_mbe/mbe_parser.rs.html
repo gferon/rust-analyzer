@@ -144,6 +144,20 @@
 <span id="144">144</span>
 <span id="145">145</span>
 <span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">/// This module parses a raw `tt::TokenStream` into macro-by-example token</span>
 <span class="doccomment">/// stream. This is a *mostly* identify function, expect for handling of</span>
@@ -221,18 +235,11 @@
     <span class="prelude-val">Ok</span>(<span class="kw">crate</span>::<span class="ident">Var</span> { <span class="ident">text</span>, <span class="ident">kind</span> })
 }
 
-<span class="kw">fn</span> <span class="ident">parse_repeat</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">TtCursor</span>, <span class="ident">transcriber</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw">crate</span>::<span class="ident">Repeat</span>, <span class="ident">ParseError</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">subtree</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">eat_subtree</span>().<span class="ident">unwrap</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">subtree</span> <span class="op">=</span> <span class="ident">parse_subtree</span>(<span class="ident">subtree</span>, <span class="ident">transcriber</span>)<span class="question-mark">?</span>;
-    <span class="ident">subtree</span>.<span class="ident">delimiter</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">Delimiter</span>::<span class="prelude-val">None</span>;
-    <span class="kw">let</span> <span class="ident">sep</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">eat_punct</span>().<span class="ident">ok_or</span>(<span class="ident">ParseError</span>::<span class="ident">Expected</span>(<span class="ident">String</span>::<span class="ident">from</span>(<span class="string">&quot;separator&quot;</span>)))<span class="question-mark">?</span>;
-    <span class="kw">let</span> (<span class="ident">separator</span>, <span class="ident">rep</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">sep</span>.<span class="ident">char</span> {
-        <span class="string">&#39;*&#39;</span> <span class="op">|</span> <span class="string">&#39;+&#39;</span> <span class="op">|</span> <span class="string">&#39;?&#39;</span> <span class="op">=&gt;</span> (<span class="prelude-val">None</span>, <span class="ident">sep</span>.<span class="ident">char</span>),
-        <span class="ident">char</span> <span class="op">=&gt;</span> {
-            (<span class="prelude-val">Some</span>(<span class="ident">char</span>), <span class="ident">p</span>.<span class="ident">eat_punct</span>().<span class="ident">ok_or</span>(<span class="ident">ParseError</span>::<span class="ident">Expected</span>(<span class="ident">String</span>::<span class="ident">from</span>(<span class="string">&quot;separator&quot;</span>)))<span class="question-mark">?</span>.<span class="ident">char</span>)
-        }
-    };
-
+<span class="kw">fn</span> <span class="ident">mk_repeat</span>(
+    <span class="ident">rep</span>: <span class="ident">char</span>,
+    <span class="ident">subtree</span>: <span class="kw">crate</span>::<span class="ident">Subtree</span>,
+    <span class="ident">separator</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw">crate</span>::<span class="ident">Separator</span><span class="op">&gt;</span>,
+) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw">crate</span>::<span class="ident">Repeat</span>, <span class="ident">ParseError</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">rep</span> {
         <span class="string">&#39;*&#39;</span> <span class="op">=&gt;</span> <span class="kw">crate</span>::<span class="ident">RepeatKind</span>::<span class="ident">ZeroOrMore</span>,
         <span class="string">&#39;+&#39;</span> <span class="op">=&gt;</span> <span class="kw">crate</span>::<span class="ident">RepeatKind</span>::<span class="ident">OneOrMore</span>,
@@ -240,6 +247,27 @@
         <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ParseError</span>::<span class="ident">Expected</span>(<span class="ident">String</span>::<span class="ident">from</span>(<span class="string">&quot;repeat&quot;</span>))),
     };
     <span class="prelude-val">Ok</span>(<span class="kw">crate</span>::<span class="ident">Repeat</span> { <span class="ident">subtree</span>, <span class="ident">kind</span>, <span class="ident">separator</span> })
+}
+
+<span class="kw">fn</span> <span class="ident">parse_repeat</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">TtCursor</span>, <span class="ident">transcriber</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw">crate</span>::<span class="ident">Repeat</span>, <span class="ident">ParseError</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">subtree</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">eat_subtree</span>().<span class="ident">unwrap</span>();
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">subtree</span> <span class="op">=</span> <span class="ident">parse_subtree</span>(<span class="ident">subtree</span>, <span class="ident">transcriber</span>)<span class="question-mark">?</span>;
+    <span class="ident">subtree</span>.<span class="ident">delimiter</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">Delimiter</span>::<span class="prelude-val">None</span>;
+
+    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">rep</span>) <span class="op">=</span> <span class="ident">p</span>.<span class="ident">at_punct</span>() {
+        <span class="kw">match</span> <span class="ident">rep</span>.<span class="ident">char</span> {
+            <span class="string">&#39;*&#39;</span> <span class="op">|</span> <span class="string">&#39;+&#39;</span> <span class="op">|</span> <span class="string">&#39;?&#39;</span> <span class="op">=&gt;</span> {
+                <span class="ident">p</span>.<span class="ident">bump</span>();
+                <span class="kw">return</span> <span class="ident">mk_repeat</span>(<span class="ident">rep</span>.<span class="ident">char</span>, <span class="ident">subtree</span>, <span class="prelude-val">None</span>);
+            }
+            <span class="kw">_</span> <span class="op">=&gt;</span> {}
+        }
+    }
+
+    <span class="kw">let</span> <span class="ident">sep</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">eat_seperator</span>().<span class="ident">ok_or</span>(<span class="ident">ParseError</span>::<span class="ident">Expected</span>(<span class="ident">String</span>::<span class="ident">from</span>(<span class="string">&quot;separator&quot;</span>)))<span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="ident">rep</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">eat_punct</span>().<span class="ident">ok_or</span>(<span class="ident">ParseError</span>::<span class="ident">Expected</span>(<span class="ident">String</span>::<span class="ident">from</span>(<span class="string">&quot;repeat&quot;</span>)))<span class="question-mark">?</span>;
+
+    <span class="ident">mk_repeat</span>(<span class="ident">rep</span>.<span class="ident">char</span>, <span class="ident">subtree</span>, <span class="prelude-val">Some</span>(<span class="ident">sep</span>))
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
@@ -256,7 +284,7 @@
         <span class="ident">is_valid</span>(<span class="string">&quot;($i:ident) =&gt; ()&quot;</span>);
         <span class="ident">expect_err</span>(<span class="string">&quot;$i:ident =&gt; ()&quot;</span>, <span class="string">&quot;subtree&quot;</span>);
         <span class="ident">expect_err</span>(<span class="string">&quot;($i:ident) ()&quot;</span>, <span class="string">&quot;`=`&quot;</span>);
-        <span class="ident">expect_err</span>(<span class="string">&quot;($($i:ident)_) =&gt; ()&quot;</span>, <span class="string">&quot;separator&quot;</span>);
+        <span class="ident">expect_err</span>(<span class="string">&quot;($($i:ident)_) =&gt; ()&quot;</span>, <span class="string">&quot;repeat&quot;</span>);
     }
 
     <span class="kw">fn</span> <span class="ident">expect_err</span>(<span class="ident">macro_body</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">expected</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) {

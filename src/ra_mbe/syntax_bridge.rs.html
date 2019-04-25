@@ -276,6 +276,35 @@
 <span id="276">276</span>
 <span id="277">277</span>
 <span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">ra_parser</span>::{<span class="ident">TreeSink</span>, <span class="ident">ParseError</span>};
 <span class="kw">use</span> <span class="ident">ra_syntax</span>::{
@@ -402,6 +431,11 @@
     <span class="ident">global_offset</span>: <span class="ident">TextUnit</span>,
     <span class="ident">tt</span>: <span class="kw-2">&amp;</span><span class="ident">SyntaxNode</span>,
 ) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">tt</span>::<span class="ident">Subtree</span><span class="op">&gt;</span> {
+    <span class="comment">// This tree is empty</span>
+    <span class="kw">if</span> <span class="ident">tt</span>.<span class="ident">first_child_or_token</span>().<span class="ident">is_none</span>() {
+        <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">tt</span>::<span class="ident">Subtree</span> { <span class="ident">token_trees</span>: <span class="macro">vec</span><span class="macro">!</span>[], <span class="ident">delimiter</span>: <span class="ident">tt</span>::<span class="ident">Delimiter</span>::<span class="prelude-val">None</span> });
+    }
+
     <span class="kw">let</span> <span class="ident">first_child</span> <span class="op">=</span> <span class="ident">tt</span>.<span class="ident">first_child_or_token</span>()<span class="question-mark">?</span>;
     <span class="kw">let</span> <span class="ident">last_child</span> <span class="op">=</span> <span class="ident">tt</span>.<span class="ident">last_child_or_token</span>()<span class="question-mark">?</span>;
     <span class="kw">let</span> (<span class="ident">delimiter</span>, <span class="ident">skip_first</span>) <span class="op">=</span> <span class="kw">match</span> (<span class="ident">first_child</span>.<span class="ident">kind</span>(), <span class="ident">last_child</span>.<span class="ident">kind</span>()) {
@@ -412,7 +446,9 @@
     };
 
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">token_trees</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
-    <span class="kw">for</span> <span class="ident">child</span> <span class="kw">in</span> <span class="ident">tt</span>.<span class="ident">children_with_tokens</span>().<span class="ident">skip</span>(<span class="ident">skip_first</span> <span class="kw">as</span> <span class="ident">usize</span>) {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">child_iter</span> <span class="op">=</span> <span class="ident">tt</span>.<span class="ident">children_with_tokens</span>().<span class="ident">skip</span>(<span class="ident">skip_first</span> <span class="kw">as</span> <span class="ident">usize</span>).<span class="ident">peekable</span>();
+
+    <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">child</span>) <span class="op">=</span> <span class="ident">child_iter</span>.<span class="ident">next</span>() {
         <span class="kw">if</span> (<span class="ident">skip_first</span> <span class="op">&amp;&amp;</span> (<span class="ident">child</span> <span class="op">==</span> <span class="ident">first_child</span> <span class="op">||</span> <span class="ident">child</span> <span class="op">==</span> <span class="ident">last_child</span>)) <span class="op">||</span> <span class="ident">child</span>.<span class="ident">kind</span>().<span class="ident">is_trivia</span>()
         {
             <span class="kw">continue</span>;
@@ -431,12 +467,25 @@
                         <span class="ident">prev</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">char</span>)
                     }
                     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">char</span>) <span class="op">=</span> <span class="ident">prev</span> {
-                        <span class="ident">token_trees</span>.<span class="ident">push</span>(
-                            <span class="ident">tt</span>::<span class="ident">Leaf</span>::<span class="ident">from</span>(<span class="ident">tt</span>::<span class="ident">Punct</span> { <span class="ident">char</span>, <span class="ident">spacing</span>: <span class="ident">tt</span>::<span class="ident">Spacing</span>::<span class="ident">Alone</span> }).<span class="ident">into</span>(),
-                        );
+                        <span class="kw">let</span> <span class="ident">spacing</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">child_iter</span>.<span class="ident">peek</span>() {
+                            <span class="prelude-val">Some</span>(<span class="ident">SyntaxElement</span>::<span class="ident">Token</span>(<span class="ident">token</span>)) <span class="op">=&gt;</span> {
+                                <span class="kw">if</span> <span class="ident">token</span>.<span class="ident">kind</span>().<span class="ident">is_punct</span>() {
+                                    <span class="ident">tt</span>::<span class="ident">Spacing</span>::<span class="ident">Joint</span>
+                                } <span class="kw">else</span> {
+                                    <span class="ident">tt</span>::<span class="ident">Spacing</span>::<span class="ident">Alone</span>
+                                }
+                            }
+                            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="ident">tt</span>::<span class="ident">Spacing</span>::<span class="ident">Alone</span>,
+                        };
+
+                        <span class="ident">token_trees</span>.<span class="ident">push</span>(<span class="ident">tt</span>::<span class="ident">Leaf</span>::<span class="ident">from</span>(<span class="ident">tt</span>::<span class="ident">Punct</span> { <span class="ident">char</span>, <span class="ident">spacing</span> }).<span class="ident">into</span>());
                     }
                 } <span class="kw">else</span> {
-                    <span class="kw">let</span> <span class="ident">child</span>: <span class="ident">tt</span>::<span class="ident">TokenTree</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">token</span>.<span class="ident">kind</span>().<span class="ident">is_keyword</span>()
+                    <span class="kw">let</span> <span class="ident">child</span>: <span class="ident">tt</span>::<span class="ident">TokenTree</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">token</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">SyntaxKind</span>::<span class="ident">TRUE_KW</span>
+                        <span class="op">||</span> <span class="ident">token</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">SyntaxKind</span>::<span class="ident">FALSE_KW</span>
+                    {
+                        <span class="ident">tt</span>::<span class="ident">Leaf</span>::<span class="ident">from</span>(<span class="ident">tt</span>::<span class="ident">Literal</span> { <span class="ident">text</span>: <span class="ident">token</span>.<span class="ident">text</span>().<span class="ident">clone</span>() }).<span class="ident">into</span>()
+                    } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">token</span>.<span class="ident">kind</span>().<span class="ident">is_keyword</span>()
                         <span class="op">||</span> <span class="ident">token</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">IDENT</span>
                         <span class="op">||</span> <span class="ident">token</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">LIFETIME</span>
                     {
@@ -497,7 +546,16 @@
         <span class="self">self</span>.<span class="ident">text_pos</span> <span class="op">+=</span> <span class="ident">TextUnit</span>::<span class="ident">of_str</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">buf</span>);
         <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="ident">SmolStr</span>::<span class="ident">new</span>(<span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">as_str</span>());
         <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">clear</span>();
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">token</span>(<span class="ident">kind</span>, <span class="ident">text</span>)
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">token</span>(<span class="ident">kind</span>, <span class="ident">text</span>);
+
+        <span class="comment">// // Add a white space to token</span>
+        <span class="comment">// let (last_kind, _, last_joint_to_next ) = self.src_querier.token(self.token_pos-n_tokens as usize);</span>
+        <span class="comment">// if !last_joint_to_next &amp;&amp; last_kind.is_punct() {</span>
+        <span class="comment">//     let (cur_kind, _, _ ) = self.src_querier.token(self.token_pos);</span>
+        <span class="comment">//     if cur_kind.is_punct() {</span>
+        <span class="comment">//         self.inner.token(WHITESPACE, &quot; &quot;.into());</span>
+        <span class="comment">//     }</span>
+        <span class="comment">// }</span>
     }
 
     <span class="kw">fn</span> <span class="ident">start_node</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">kind</span>: <span class="ident">SyntaxKind</span>) {
