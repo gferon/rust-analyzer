@@ -835,12 +835,12 @@
     <span class="comment">// `newly_dollar_open` is a flag indicated that dollar is just closed after lhs, e.g.</span>
     <span class="comment">// `$1$ + a`</span>
     <span class="comment">// We use this flag to skip handling it.</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">newly_dollar_open</span> <span class="op">=</span> <span class="bool-val">false</span>;
-
-    <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">at_l_dollar</span>() {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">newly_dollar_open</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">at_l_dollar</span>() {
         <span class="kw-2">*</span><span class="ident">dollar_lvl</span> <span class="op">+=</span> <span class="ident">p</span>.<span class="ident">eat_l_dollars</span>();
-        <span class="ident">newly_dollar_open</span> <span class="op">=</span> <span class="bool-val">true</span>;
-    }
+        <span class="bool-val">true</span>
+    } <span class="kw">else</span> {
+        <span class="bool-val">false</span>
+    };
 
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">lhs</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">lhs</span>(<span class="ident">p</span>, <span class="ident">r</span>, <span class="ident">dollar_lvl</span>) {
         <span class="prelude-val">Some</span>((<span class="ident">lhs</span>, <span class="ident">blocklike</span>)) <span class="op">=&gt;</span> {
@@ -1118,7 +1118,7 @@
         }
         <span class="ident">EXCL</span> <span class="op">=&gt;</span> {
             <span class="kw">let</span> <span class="ident">block_like</span> <span class="op">=</span> <span class="ident">items</span>::<span class="ident">macro_call_after_excl</span>(<span class="ident">p</span>);
-            <span class="kw">return</span> (<span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">MACRO_CALL</span>), <span class="ident">block_like</span>);
+            (<span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">MACRO_CALL</span>), <span class="ident">block_like</span>)
         }
         <span class="kw">_</span> <span class="op">=&gt;</span> (<span class="ident">m</span>.<span class="ident">complete</span>(<span class="ident">p</span>, <span class="ident">PATH_EXPR</span>), <span class="ident">BlockLike</span>::<span class="ident">NotBlock</span>),
     }
