@@ -552,11 +552,18 @@
 <span id="552">552</span>
 <span id="553">553</span>
 <span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">ra_db</span>::<span class="ident">SourceDatabase</span>;
 <span class="kw">use</span> <span class="ident">ra_syntax</span>::{
     <span class="ident">AstNode</span>, <span class="ident">ast</span>,
-    <span class="ident">algo</span>::{<span class="ident">find_covering_element</span>, <span class="ident">find_node_at_offset</span>, <span class="ident">find_token_at_offset</span>},
+    <span class="ident">algo</span>::{<span class="ident">find_covering_element</span>, <span class="ident">find_node_at_offset</span>, <span class="ident">ancestors_at_offset</span>},
 };
 <span class="kw">use</span> <span class="ident">hir</span>::<span class="ident">HirDisplay</span>;
 
@@ -659,12 +666,8 @@
     }
 
     <span class="kw">if</span> <span class="ident">range</span>.<span class="ident">is_none</span>() {
-        <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">find_token_at_offset</span>(<span class="ident">file</span>.<span class="ident">syntax</span>(), <span class="ident">position</span>.<span class="ident">offset</span>).<span class="ident">find_map</span>(<span class="op">|</span><span class="ident">token</span><span class="op">|</span> {
-            <span class="ident">token</span>
-                .<span class="ident">parent</span>()
-                .<span class="ident">ancestors</span>()
-                .<span class="ident">find</span>(<span class="op">|</span><span class="ident">n</span><span class="op">|</span> <span class="ident">ast</span>::<span class="ident">Expr</span>::<span class="ident">cast</span>(<span class="kw-2">*</span><span class="ident">n</span>).<span class="ident">is_some</span>() <span class="op">||</span> <span class="ident">ast</span>::<span class="ident">Pat</span>::<span class="ident">cast</span>(<span class="kw-2">*</span><span class="ident">n</span>).<span class="ident">is_some</span>())
-        })<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">ancestors_at_offset</span>(<span class="ident">file</span>.<span class="ident">syntax</span>(), <span class="ident">position</span>.<span class="ident">offset</span>)
+            .<span class="ident">find</span>(<span class="op">|</span><span class="ident">n</span><span class="op">|</span> <span class="ident">ast</span>::<span class="ident">Expr</span>::<span class="ident">cast</span>(<span class="kw-2">*</span><span class="ident">n</span>).<span class="ident">is_some</span>() <span class="op">||</span> <span class="ident">ast</span>::<span class="ident">Pat</span>::<span class="ident">cast</span>(<span class="kw-2">*</span><span class="ident">n</span>).<span class="ident">is_some</span>())<span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">frange</span> <span class="op">=</span> <span class="ident">FileRange</span> { <span class="ident">file_id</span>: <span class="ident">position</span>.<span class="ident">file_id</span>, <span class="ident">range</span>: <span class="ident">node</span>.<span class="ident">range</span>() };
         <span class="ident">res</span>.<span class="ident">extend</span>(<span class="ident">type_of</span>(<span class="ident">db</span>, <span class="ident">frange</span>).<span class="ident">map</span>(<span class="ident">rust_code_markup</span>));
         <span class="ident">range</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">node</span>.<span class="ident">range</span>());
@@ -948,6 +951,17 @@ The Some variant
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">hover_for_local_variable_pat</span>() {
         <span class="kw">let</span> (<span class="ident">analysis</span>, <span class="ident">position</span>) <span class="op">=</span> <span class="ident">single_file_with_position</span>(<span class="string">&quot;fn func(fo&lt;|&gt;o: i32) {}&quot;</span>);
+        <span class="kw">let</span> <span class="ident">hover</span> <span class="op">=</span> <span class="ident">analysis</span>.<span class="ident">hover</span>(<span class="ident">position</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">trim_markup_opt</span>(<span class="ident">hover</span>.<span class="ident">info</span>.<span class="ident">first</span>()), <span class="prelude-val">Some</span>(<span class="string">&quot;i32&quot;</span>));
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">hover_local_var_edge</span>() {
+        <span class="kw">let</span> (<span class="ident">analysis</span>, <span class="ident">position</span>) <span class="op">=</span> <span class="ident">single_file_with_position</span>(
+            <span class="string">&quot;
+fn func(foo: i32) { if true { &lt;|&gt;foo; }; }
+&quot;</span>,
+        );
         <span class="kw">let</span> <span class="ident">hover</span> <span class="op">=</span> <span class="ident">analysis</span>.<span class="ident">hover</span>(<span class="ident">position</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>();
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">trim_markup_opt</span>(<span class="ident">hover</span>.<span class="ident">info</span>.<span class="ident">first</span>()), <span class="prelude-val">Some</span>(<span class="string">&quot;i32&quot;</span>));
     }

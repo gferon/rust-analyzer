@@ -465,6 +465,7 @@
 <span id="465">465</span>
 <span id="466">466</span>
 <span id="467">467</span>
+<span id="468">468</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">ra_db</span>::{<span class="ident">FileId</span>, <span class="ident">SourceDatabase</span>};
 <span class="kw">use</span> <span class="ident">ra_syntax</span>::{
@@ -493,6 +494,7 @@
     <span class="prelude-val">None</span>
 }
 
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum</span> <span class="ident">ReferenceResult</span> {
     <span class="ident">Exact</span>(<span class="ident">NavigationTarget</span>),
     <span class="ident">Approximate</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">NavigationTarget</span><span class="op">&gt;</span>),
