@@ -176,53 +176,6 @@
 <span id="176">176</span>
 <span id="177">177</span>
 <span id="178">178</span>
-<span id="179">179</span>
-<span id="180">180</span>
-<span id="181">181</span>
-<span id="182">182</span>
-<span id="183">183</span>
-<span id="184">184</span>
-<span id="185">185</span>
-<span id="186">186</span>
-<span id="187">187</span>
-<span id="188">188</span>
-<span id="189">189</span>
-<span id="190">190</span>
-<span id="191">191</span>
-<span id="192">192</span>
-<span id="193">193</span>
-<span id="194">194</span>
-<span id="195">195</span>
-<span id="196">196</span>
-<span id="197">197</span>
-<span id="198">198</span>
-<span id="199">199</span>
-<span id="200">200</span>
-<span id="201">201</span>
-<span id="202">202</span>
-<span id="203">203</span>
-<span id="204">204</span>
-<span id="205">205</span>
-<span id="206">206</span>
-<span id="207">207</span>
-<span id="208">208</span>
-<span id="209">209</span>
-<span id="210">210</span>
-<span id="211">211</span>
-<span id="212">212</span>
-<span id="213">213</span>
-<span id="214">214</span>
-<span id="215">215</span>
-<span id="216">216</span>
-<span id="217">217</span>
-<span id="218">218</span>
-<span id="219">219</span>
-<span id="220">220</span>
-<span id="221">221</span>
-<span id="222">222</span>
-<span id="223">223</span>
-<span id="224">224</span>
-<span id="225">225</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">mod</span> <span class="ident">classes</span>;
 <span class="kw">mod</span> <span class="ident">comments</span>;
@@ -314,65 +267,18 @@
     }
 
     <span class="kw">match</span> <span class="ident">c</span> {
-        <span class="comment">// Multi-byte tokens.</span>
-        <span class="string">&#39;.&#39;</span> <span class="op">=&gt;</span> {
-            <span class="kw">return</span> <span class="kw">match</span> (<span class="ident">ptr</span>.<span class="ident">current</span>(), <span class="ident">ptr</span>.<span class="ident">nth</span>(<span class="number">1</span>)) {
-                (<span class="prelude-val">Some</span>(<span class="string">&#39;.&#39;</span>), <span class="prelude-val">Some</span>(<span class="string">&#39;.&#39;</span>)) <span class="op">=&gt;</span> {
-                    <span class="ident">ptr</span>.<span class="ident">bump</span>();
-                    <span class="ident">ptr</span>.<span class="ident">bump</span>();
-                    <span class="ident">DOTDOTDOT</span>
-                }
-                (<span class="prelude-val">Some</span>(<span class="string">&#39;.&#39;</span>), <span class="prelude-val">Some</span>(<span class="string">&#39;=&#39;</span>)) <span class="op">=&gt;</span> {
-                    <span class="ident">ptr</span>.<span class="ident">bump</span>();
-                    <span class="ident">ptr</span>.<span class="ident">bump</span>();
-                    <span class="ident">DOTDOTEQ</span>
-                }
-                (<span class="prelude-val">Some</span>(<span class="string">&#39;.&#39;</span>), <span class="kw">_</span>) <span class="op">=&gt;</span> {
-                    <span class="ident">ptr</span>.<span class="ident">bump</span>();
-                    <span class="ident">DOTDOT</span>
-                }
-                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="ident">DOT</span>,
-            };
-        }
-        <span class="string">&#39;:&#39;</span> <span class="op">=&gt;</span> {
-            <span class="kw">return</span> <span class="kw">match</span> <span class="ident">ptr</span>.<span class="ident">current</span>() {
-                <span class="prelude-val">Some</span>(<span class="string">&#39;:&#39;</span>) <span class="op">=&gt;</span> {
-                    <span class="ident">ptr</span>.<span class="ident">bump</span>();
-                    <span class="ident">COLONCOLON</span>
-                }
-                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="ident">COLON</span>,
-            };
-        }
-        <span class="string">&#39;=&#39;</span> <span class="op">=&gt;</span> {
-            <span class="kw">return</span> <span class="kw">match</span> <span class="ident">ptr</span>.<span class="ident">current</span>() {
-                <span class="prelude-val">Some</span>(<span class="string">&#39;=&#39;</span>) <span class="op">=&gt;</span> {
-                    <span class="ident">ptr</span>.<span class="ident">bump</span>();
-                    <span class="ident">EQEQ</span>
-                }
-                <span class="prelude-val">Some</span>(<span class="string">&#39;&gt;&#39;</span>) <span class="op">=&gt;</span> {
-                    <span class="ident">ptr</span>.<span class="ident">bump</span>();
-                    <span class="ident">FAT_ARROW</span>
-                }
-                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="ident">EQ</span>,
-            };
-        }
-        <span class="string">&#39;!&#39;</span> <span class="op">=&gt;</span> {
-            <span class="kw">return</span> <span class="kw">match</span> <span class="ident">ptr</span>.<span class="ident">current</span>() {
-                <span class="prelude-val">Some</span>(<span class="string">&#39;=&#39;</span>) <span class="op">=&gt;</span> {
-                    <span class="ident">ptr</span>.<span class="ident">bump</span>();
-                    <span class="ident">NEQ</span>
-                }
-                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="ident">EXCL</span>,
-            };
-        }
-        <span class="string">&#39;-&#39;</span> <span class="op">=&gt;</span> {
-            <span class="kw">return</span> <span class="kw">if</span> <span class="ident">ptr</span>.<span class="ident">at</span>(<span class="string">&#39;&gt;&#39;</span>) {
-                <span class="ident">ptr</span>.<span class="ident">bump</span>();
-                <span class="ident">THIN_ARROW</span>
-            } <span class="kw">else</span> {
-                <span class="ident">MINUS</span>
-            };
-        }
+        <span class="comment">// Possiblily multi-byte tokens,</span>
+        <span class="comment">// but we only produce single byte token now</span>
+        <span class="comment">// DOTDOTDOT, DOTDOT, DOTDOTEQ, DOT</span>
+        <span class="string">&#39;.&#39;</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="ident">DOT</span>,
+        <span class="comment">// COLONCOLON COLON</span>
+        <span class="string">&#39;:&#39;</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="ident">COLON</span>,
+        <span class="comment">// EQEQ FATARROW EQ</span>
+        <span class="string">&#39;=&#39;</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="ident">EQ</span>,
+        <span class="comment">// NEQ EXCL</span>
+        <span class="string">&#39;!&#39;</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="ident">EXCL</span>,
+        <span class="comment">// THIN_ARROW MINUS</span>
+        <span class="string">&#39;-&#39;</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="ident">MINUS</span>,
 
         <span class="comment">// If the character is an ident start not followed by another single</span>
         <span class="comment">// quote, then this is a lifetime name:</span>
